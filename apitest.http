@@ -1,5 +1,0 @@
-#GET 127.0.0.1:8000/api/1rm?reps=7&weight=100
-#GET 127.0.0.1:8000/api/wilks?female=True&body=80&lift=120
-#GET 127.0.0.1:8000/api/dots?female=True&body=80&lift=120
-#GET 127.0.0.1:8000/api/ipfgl?female=True&body=80&lift=120
-GET 127.0.0.1:8000/api/total?female=False&body=100&sq=200&bp=130&dl=240&sq-reps=1&bp-reps=1&dl-reps=1
