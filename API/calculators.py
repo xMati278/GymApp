@@ -2,45 +2,6 @@ from typing import Dict, Union
 
 
 class Calculators:
-    @staticmethod
-    def validate_calculator_data(lifted_weight: str, reps: str = None, is_female: str = None, body_weight: str = None,
-                                 one_rm_calc: bool = False) -> Dict[str, Union[str, float, int]]:
-        """
-            Validate data for calculators.
-        :param lifted_weight: lifted weight amount
-        :param reps: reps amount
-        :param is_female: if female type True else type False
-        :param body_weight: body weight
-        :param one_rm_calc: optional bool param for one rep max calculator
-        :return: dict with validated data or error
-        """
-
-        if not one_rm_calc:
-            if is_female is None or body_weight is None:
-                return {'error': 'Missing required parameters.'}
-        else:
-            if reps is None:
-                return {'error': 'Missing required parameters.'}
-
-        if lifted_weight is None:
-            return {'error': 'Missing required parameters.'}
-
-        try:
-            if not one_rm_calc:
-                is_female = is_female.lower() == 'true'
-                body_weight = float(body_weight)
-            else:
-                reps = int(reps)
-
-            lifted_weight = float(lifted_weight)
-
-            if not one_rm_calc:
-                return {'is_female': is_female, 'body_weight': body_weight, 'lifted_weight': lifted_weight}
-            else:
-                return {'lifted_weight': lifted_weight, 'reps': reps}
-
-        except ValueError:
-            return {'error': 'Invalid parameter types.'}
 
     @staticmethod
     def calculate_1rm_logic(lifted_weight: float, reps: int) -> float:
@@ -191,42 +152,3 @@ class Calculators:
             'total_dots': total_dots,
             'total_ipf_gl': total_ipf_gl,
         }
-
-    @staticmethod
-    def validate_total_data(is_female: str = None, body_weight: str = None, squat_weight: str = None,
-                            squat_reps: str = None,
-                            bench_weight: str = None, bench_reps: str = None, deadlift_weight: str = None,
-                            deadlift_reps: str = None) -> Dict[str, Union[int, float, str]]:
-        """
-            Validate, calculates and returns one rep maxes, total and points(WILKS, DOTS, IPF GL) for the given data.
-        :param is_female: if female type True else type False
-        :param body_weight: body weight
-        :param squat_weight: squat weight
-        :param squat_reps: how many repetitions you did with the given squat weight
-        :param bench_weight: bench weight
-        :param bench_reps: how many repetitions you did with the given bench press weight
-        :param deadlift_weight: deadlift weight
-        :param deadlift_reps: how many repetitions you did with the given deadlift weight
-        :return:
-        """
-
-        if is_female is None or body_weight is None or squat_weight is None or bench_weight is None or \
-                deadlift_weight is None or squat_reps is None or bench_reps is None or deadlift_reps is None:
-            return {'error': 'Missing required parameters.'}
-
-        try:
-            is_female = is_female.lower() == 'true'
-            body_weight = float(body_weight)
-            squat_weight = float(squat_weight)
-            squat_reps = int(squat_reps)
-            bench_weight = float(bench_weight)
-            bench_reps = int(bench_reps)
-            deadlift_weight = float(deadlift_weight)
-            deadlift_reps = int(deadlift_reps)
-
-            return {'is_female': is_female, 'body_weight': body_weight, 'squat_weight': squat_weight,
-                    'squat_reps': squat_reps, 'bench_weight': bench_weight, 'bench_reps': bench_reps,
-                    'deadlift_weight': deadlift_weight, 'deadlift_reps': deadlift_reps}
-
-        except ValueError:
-            return {'error': 'Invalid parameter types.'}
