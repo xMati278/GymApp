@@ -1,130 +1,116 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from http import HTTPStatus
+from rest_framework.viewsets import generics
+from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework import status
 from .calculators import Calculators
+from .serializers import BodyPartSerializer, Calculate1RMSerializer, PointsCalculatorSerializer,\
+    CalculateTotalSerializer
+from trainings.models import BodyPart
 # Create your views here.
 
 
-@api_view(['GET'])
-def calculate_1rm(request) -> Response:
+class Calculate1RM(APIView):
     """
-        Validate, calculates and returns one rep max weight for the given data.
-    :return: Response with one rep max weight with key '1rm'
+    Validate, calculates and returns one rep max weight for the given data.
     """
 
-    reps = request.GET.get('reps')
-    lifted_weight = request.GET.get('weight')
+    @staticmethod
+    def get(request, *args, **kwargs) -> JsonResponse:
+        serializer = Calculate1RMSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
 
-    data_dict = Calculators.validate_calculator_data(reps=reps, lifted_weight=lifted_weight, one_rm_calc=True)
-    if 'error' in data_dict:
-        return Response({'error': data_dict['error']}, status=HTTPStatus.BAD_REQUEST)
+        reps = serializer.validated_data.get('reps')
+        lifted_weight = serializer.validated_data.get('weight')
+        result = Calculators.calculate_1rm_logic(lifted_weight=lifted_weight, reps=reps)
 
-    reps, lifted_weight = data_dict['reps'], data_dict['lifted_weight']
-
-    result = Calculators.calculate_1rm_logic(lifted_weight, reps)
-    return Response({'1rm': result}, status=HTTPStatus.OK)
+        return JsonResponse(data={'1rm': result}, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-def calculate_wilks(request) -> Response:
+class CalculateWilks(APIView):
     """
         Validate, calculates and returns wilks points for the given data.
     :return: Response with wilks points with key 'wilks'
     """
 
-    is_female = request.GET.get('female')
-    body_weight = request.GET.get('body')
-    lifted_weight = request.GET.get('lift')
+    @staticmethod
+    def get(request, *args, **kwargs):
+        serializer = PointsCalculatorSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
 
-    data_dict = Calculators.validate_calculator_data(is_female=is_female, body_weight=body_weight,
-                                         lifted_weight=lifted_weight)
-    if 'error' in data_dict:
-        return Response({'error': data_dict['error']}, status=HTTPStatus.BAD_REQUEST)
+        is_female = serializer.validated_data.get('female')
+        body_weight = serializer.validated_data.get('body')
+        lifted_weight = serializer.validated_data.get('lift')
 
-    is_female, body_weight, lifted_weight = data_dict['is_female'], data_dict['body_weight'],\
-        data_dict['lifted_weight']
+        result = Calculators.calculate_wilks_logic(is_female=is_female, body_weight=body_weight,
+                                                   lifted_weight=lifted_weight)
 
-    wilks = Calculators.calculate_wilks_logic(is_female=is_female, body_weight=body_weight, lifted_weight=lifted_weight)
-
-    return Response({'wilks': wilks}, status=HTTPStatus.OK)
+        return JsonResponse(data={'wilks': result}, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-def calculate_dots(request) -> Response:
+class CalculateDots(APIView):
     """
         Validate, calculates and returns dots points for the given data.
-    :return: Response with DOTS points with key 'dots'
+    :return: Response with wilks points with key 'dots'
     """
 
-    is_female = request.GET.get('female')
-    body_weight = request.GET.get('body')
-    lifted_weight = request.GET.get('lift')
+    @staticmethod
+    def get(request, *args, **kwargs):
+        serializer = PointsCalculatorSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
 
-    data_dict = Calculators.validate_calculator_data(is_female=is_female, body_weight=body_weight,
-                                         lifted_weight=lifted_weight)
-    if 'error' in data_dict:
-        return Response({'error': data_dict['error']}, status=HTTPStatus.BAD_REQUEST)
+        is_female = serializer.validated_data.get('female')
+        body_weight = serializer.validated_data.get('body')
+        lifted_weight = serializer.validated_data.get('lift')
 
-    is_female, body_weight, lifted_weight = data_dict['is_female'], data_dict['body_weight'],\
-        data_dict['lifted_weight']
+        result = Calculators.calculate_dots_logic(is_female=is_female, body_weight=body_weight,
+                                                  lifted_weight=lifted_weight)
 
-    dots = Calculators.calculate_dots_logic(is_female=is_female, body_weight=body_weight, lifted_weight=lifted_weight)
-
-    return Response({'dots': dots}, status=HTTPStatus.OK)
+        return JsonResponse(data={'dots': result}, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-def calculate_ipf_gl(request) -> Response:
+class CalculateIpfGl(APIView):
     """
-        Validate, calculates and returns IPF GL for the given data.
-    :return: Response with DOTS points with key 'ipf_gl'
+        Validate, calculates and returns dots points for the given data.
+    :return: Response with wilks points with key 'ipf_gl'
     """
 
-    is_female = request.GET.get('female')
-    body_weight = request.GET.get('body')
-    lifted_weight = request.GET.get('lift')
+    @staticmethod
+    def get(request, *args, **kwargs):
+        serializer = PointsCalculatorSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
 
-    data_dict = Calculators.validate_calculator_data(is_female=is_female, body_weight=body_weight,
-                                         lifted_weight=lifted_weight)
-    if 'error' in data_dict:
-        return Response({'error': data_dict['error']}, status=HTTPStatus.BAD_REQUEST)
+        is_female = serializer.validated_data.get('female')
+        body_weight = serializer.validated_data.get('body')
+        lifted_weight = serializer.validated_data.get('lift')
 
-    is_female, body_weight, lifted_weight = data_dict['is_female'], data_dict['body_weight'],\
-        data_dict['lifted_weight']
+        result = Calculators.calculate_ipf_gl_logic(is_female=is_female, body_weight=body_weight,
+                                                    lifted_weight=lifted_weight)
 
-    ipfgl = Calculators.calculate_ipf_gl_logic(is_female=is_female, body_weight=body_weight, lifted_weight=lifted_weight)
-
-    return Response({'ipf_gl': ipfgl}, status=HTTPStatus.OK)
+        return JsonResponse(data={'ipf_gl': result}, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-def calculate_total(request) -> Response:
-    """
-        Validate, calculates and returns one rep maxes, total and points(WILKS, DOTS, IPF GL) for the given data.
-    :return: Response with one rep maxes, total and points(WILKS, DOTS, IPF GL)
-    """
+class CalculateTotal(APIView):
+    @staticmethod
+    def get(request, *args, **kwargs):
+        serializer = CalculateTotalSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
 
-    is_female = request.GET.get('female')
-    body_weight = request.GET.get('body')
-    squat_weight = request.GET.get('sq')
-    squat_reps = request.GET.get('sq-reps')
-    bench_weight = request.GET.get('bp')
-    bench_reps = request.GET.get('bp-reps')
-    deadlift_weight = request.GET.get('dl')
-    deadlift_reps = request.GET.get('dl-reps')
+        is_female = serializer.validated_data.get('female')
+        body_weight = serializer.validated_data.get('body')
+        squat_weight = serializer.validated_data.get('sq')
+        squat_reps = serializer.validated_data.get('sq_reps')
+        bench_weight = serializer.validated_data.get('bp')
+        bench_reps = serializer.validated_data.get('bp_reps')
+        deadlift_weight = serializer.validated_data.get('dl')
+        deadlift_reps = serializer.validated_data.get('dl_reps')
 
-    data_dict = Calculators.validate_total_data(is_female=is_female, body_weight=body_weight, squat_weight=squat_weight,
-                                    squat_reps=squat_reps, bench_weight=bench_weight, bench_reps=bench_reps,
-                                    deadlift_weight=deadlift_weight, deadlift_reps=deadlift_reps)
-    if 'error' in data_dict:
-        return Response({'error': data_dict['error']}, status=HTTPStatus.BAD_REQUEST)
+        result = Calculators.total_logic(is_female=is_female, body_weight=body_weight, squat_weight=squat_weight,
+                                         squat_reps=squat_reps, bench_weight=bench_weight, bench_reps=bench_reps,
+                                         deadlift_weight=deadlift_weight, deadlift_reps=deadlift_reps)
 
-    is_female, body_weight, squat_weight, squat_reps, bench_weight, bench_reps, deadlift_weight, deadlift_reps = \
-        data_dict['is_female'], data_dict['body_weight'], data_dict['squat_weight'], data_dict['squat_reps'],\
-        data_dict['bench_weight'], data_dict['bench_reps'], data_dict['deadlift_weight'], data_dict['deadlift_reps']
+        return JsonResponse(data=result, status=status.HTTP_200_OK)
 
-    total = Calculators.total_logic(is_female=is_female, body_weight=body_weight, squat_weight=squat_weight, squat_reps=squat_reps,
-                        bench_weight=bench_weight, bench_reps=bench_reps, deadlift_weight=deadlift_weight,
-                        deadlift_reps=deadlift_reps)
 
-    return Response(total, status=HTTPStatus.OK)
+class GetAllBodyParts(generics.ListAPIView):
+    serializer_class = BodyPartSerializer
+    queryset = BodyPart.objects.all()
