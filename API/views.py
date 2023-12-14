@@ -29,7 +29,6 @@ class Calculate1RM(APIView):
 class CalculateWilks(APIView):
     """
         Validate, calculates and returns wilks points for the given data.
-    :return: Response with wilks points with key 'wilks'
     """
 
     @staticmethod
@@ -50,7 +49,6 @@ class CalculateWilks(APIView):
 class CalculateDots(APIView):
     """
         Validate, calculates and returns dots points for the given data.
-    :return: Response with wilks points with key 'dots'
     """
 
     @staticmethod
@@ -71,7 +69,6 @@ class CalculateDots(APIView):
 class CalculateIpfGl(APIView):
     """
         Validate, calculates and returns dots points for the given data.
-    :return: Response with wilks points with key 'ipf_gl'
     """
 
     @staticmethod
@@ -90,6 +87,10 @@ class CalculateIpfGl(APIView):
 
 
 class CalculateTotal(APIView):
+    """
+        Validate, calculates and returns total data for the given data.
+    """
+
     @staticmethod
     def get(request, *args, **kwargs):
         serializer = CalculateTotalSerializer(data=request.query_params)
