@@ -1,11 +1,5 @@
 from rest_framework import serializers
-from trainings.models import BodyPart
-
-
-class BodyPartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BodyPart
-        fields = '__all__'
+from trainings.models import BodyPart, Exercise
 
 
 class Calculate1RMSerializer(serializers.Serializer):
@@ -28,3 +22,22 @@ class CalculateTotalSerializer(serializers.Serializer):
     bp_reps = serializers.IntegerField()
     dl = serializers.FloatField()
     dl_reps = serializers.IntegerField()
+
+
+class BodyPartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BodyPart
+        fields = '__all__'
+
+
+class GetExercisesSerializer(serializers.ModelSerializer):
+    body_part = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Exercise
+        fields = ['id', 'name', 'body_part', 'user']
+
+    @staticmethod
+    def get_body_part(obj):
+        return [body_part.name for body_part in obj.body_part.all()]
+

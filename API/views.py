@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .calculators import Calculators
 from .serializers import BodyPartSerializer, Calculate1RMSerializer, PointsCalculatorSerializer,\
-    CalculateTotalSerializer
-from trainings.models import BodyPart
+    CalculateTotalSerializer, GetExercisesSerializer
+from trainings.models import BodyPart, Exercise
 # Create your views here.
 
 
@@ -115,3 +115,18 @@ class CalculateTotal(APIView):
 class GetAllBodyParts(generics.ListAPIView):
     serializer_class = BodyPartSerializer
     queryset = BodyPart.objects.all()
+
+
+class GetPublicExercises(generics.ListAPIView):
+    serializer_class = GetExercisesSerializer
+    queryset = Exercise.objects.filter(public=True)
+
+
+class GetPrivateExercises(generics.ListAPIView):
+    serializer_class = GetExercisesSerializer
+
+    def get_queryset(self):
+        user = self.request.query_params.get('user')
+        queryset = Exercise.objects.filter(user=user, public=False)
+
+        return queryset

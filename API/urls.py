@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import GetAllBodyParts, Calculate1RM, CalculateWilks, CalculateDots, CalculateIpfGl, CalculateTotal
+from .views import GetAllBodyParts, Calculate1RM, CalculateWilks, CalculateDots, CalculateIpfGl, CalculateTotal,\
+    GetPublicExercises, GetPrivateExercises
 
 urlpatterns = [
     path('1rm/', Calculate1RM.as_view(), name='calculate-1rm'),
@@ -8,4 +9,6 @@ urlpatterns = [
     path('ipfgl/', CalculateIpfGl.as_view(), name='calculate-ipf-gl'),
     path('total/', CalculateTotal.as_view(), name='calculate-total'),
     path('bodyparts/', GetAllBodyParts.as_view(), name='get-all-body-parts'),
+    path('getpublicexercises/', GetPublicExercises.as_view(), name='get-public-exercises'),
+    path('getprivateexercises/', GetPrivateExercises.as_view(), name='get-private-exercises'),
 ]
