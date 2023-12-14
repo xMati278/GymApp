@@ -11,8 +11,7 @@ class BodyPart(models.Model):
 
 class Exercise(models.Model):
     name = models.CharField(max_length=100, help_text='name of exercise')
-    body_part = models.CharField(max_length=30, choices=[(part.name, part.name) for part in BodyPart.objects.all()],
-                                 help_text='body part for exercise')
+    body_part = models.ManyToManyField(BodyPart, help_text='body part for exercise')
     public = models.BooleanField(default=False, help_text='defines if exercise is visible for other users')
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, default=None,
                              related_name='exercises', help_text='exercise owner')
