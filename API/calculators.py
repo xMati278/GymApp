@@ -7,7 +7,7 @@ class Calculators:
     def calculate_1rm_logic(lift: float, reps: int) -> dict:
         """
             Calculate one rep max weight for the given data.
-        :param lifted_weight: lifted weight
+        :param lift: lifted weight
         :param reps: reps amount
         :return: one rep max weight for the data provided
         """
@@ -24,9 +24,9 @@ class Calculators:
     def calculate_wilks_logic(female: bool, body: float, lift: float) -> dict:
         """
             Calculate Wilks points for the given data.
-        :param is_female: if female type True else type False
-        :param body_weight: body weight
-        :param lifted_weight: lifted weight
+        :param female: if female type True else type False
+        :param body: body weight
+        :param lift: lifted weight
         :return: wilks points for the provided data
         """
 
@@ -50,9 +50,9 @@ class Calculators:
     def calculate_dots_logic(female: bool, body: float, lift: float) -> dict:
         """
             Calculate DOTS points for the given data.
-        :param is_female: if female type True else type False
-        :param body_weight: body weight
-        :param lifted_weight: lifted weight
+        :param female: if female type True else type False
+        :param body: body weight
+        :param lift: lifted weight
         :return: DOTS points for the data provided
         """
 
@@ -101,36 +101,25 @@ class Calculators:
         Calculate one rep maxes, total and points(WILKS, DOTS, IPF GL) for the given data.
         """
 
-        squat_max = Calculators.calculate_1rm_logic(lifted_weight=sq, reps=sq_reps)
-        squat_wilks = Calculators.calculate_wilks_logic(is_female=female, body_weight=body,
-                                                        lifted_weight=squat_max)
-        squat_dots = Calculators.calculate_dots_logic(is_female=female, body_weight=body,
-                                                      lifted_weight=squat_max)
-        squat_ipf_gl = Calculators.calculate_ipf_gl_logic(is_female=female, body_weight=body,
-                                                          lifted_weight=squat_max)
+        squat_max = Calculators.calculate_1rm_logic(lift=sq, reps=sq_reps)['result']
+        squat_wilks = Calculators.calculate_wilks_logic(female=female, body=body, lift=squat_max)['result']
+        squat_dots = Calculators.calculate_dots_logic(female=female, body=body, lift=squat_max)['result']
+        squat_ipf_gl = Calculators.calculate_ipf_gl_logic(female=female, body=body, lift=squat_max)['result']
 
-        bench_max = Calculators.calculate_1rm_logic(lifted_weight=bp, reps=bp_reps)
-        bench_wilks = Calculators.calculate_wilks_logic(is_female=female, body_weight=body,
-                                                        lifted_weight=bench_max)
-        bench_dots = Calculators.calculate_dots_logic(is_female=female, body_weight=body,
-                                                      lifted_weight=bench_max)
-        bench_ipf_gl = Calculators.calculate_ipf_gl_logic(is_female=female, body_weight=body,
-                                                          lifted_weight=bench_max)
+        bench_max = Calculators.calculate_1rm_logic(lift=bp, reps=bp_reps)['result']
+        bench_wilks = Calculators.calculate_wilks_logic(female=female, body=body, lift=bench_max)['result']
+        bench_dots = Calculators.calculate_dots_logic(female=female, body=body, lift=bench_max)['result']
+        bench_ipf_gl = Calculators.calculate_ipf_gl_logic(female=female, body=body, lift=bench_max)['result']
 
-        deadlift_max = Calculators.calculate_1rm_logic(lifted_weight=dl, reps=dl_reps)
-        deadlift_wilks = Calculators.calculate_wilks_logic(is_female=female, body_weight=body,
-                                                           lifted_weight=deadlift_max)
-        deadlift_dots = Calculators.calculate_dots_logic(is_female=female, body_weight=body,
-                                                         lifted_weight=deadlift_max)
-        deadlift_ipf_gl = Calculators.calculate_ipf_gl_logic(is_female=female, body_weight=body,
-                                                             lifted_weight=deadlift_max)
+        deadlift_max = Calculators.calculate_1rm_logic(lift=dl, reps=dl_reps)['result']
+        deadlift_wilks = Calculators.calculate_wilks_logic(female=female, body=body, lift=deadlift_max)['result']
+        deadlift_dots = Calculators.calculate_dots_logic(female=female, body=body, lift=deadlift_max)['result']
+        deadlift_ipf_gl = Calculators.calculate_ipf_gl_logic(female=female, body=body, lift=deadlift_max)['result']
 
         total = sum([squat_max, bench_max, deadlift_max])
-        total_wilks = Calculators.calculate_wilks_logic(is_female=female, body_weight=body,
-                                                        lifted_weight=total)
-        total_dots = Calculators.calculate_dots_logic(is_female=female, body_weight=body, lifted_weight=total)
-        total_ipf_gl = Calculators.calculate_ipf_gl_logic(is_female=female, body_weight=body,
-                                                          lifted_weight=total)
+        total_wilks = Calculators.calculate_wilks_logic(female=female, body=body, lift=total)['result']
+        total_dots = Calculators.calculate_dots_logic(female=female, body=body, lift=total)['result']
+        total_ipf_gl = Calculators.calculate_ipf_gl_logic(female=female, body=body, lift=total)['result']
 
         return {
             'gender': 'female' if female else 'male',
