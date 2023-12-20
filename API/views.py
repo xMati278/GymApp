@@ -1,12 +1,12 @@
 from rest_framework.viewsets import generics
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from rest_framework import status
 from .calculators import Calculators
 from .serializers import BodyPartSerializer, Calculate1RMSerializer, PointsCalculatorSerializer,\
-    CalculateTotalSerializer, GetExercisesSerializer
-from trainings.models import BodyPart, Exercise
-# Create your views here.
+    CalculateTotalSerializer, CalculatorResultSerializer, TotalCalculatorResultSerializer, GetExercisesSerializer,\
+    GetUserTrainingPlansSerializer, CreatePrivateExerciseSerializer,\
+    DeleteExerciseSerializer
+from trainings.models import BodyPart, Exercise, UserTrainingPlans
 
 
 class Calculate1RM(APIView):
@@ -17,13 +17,12 @@ class Calculate1RM(APIView):
     @staticmethod
     def get(request, *args, **kwargs) -> JsonResponse:
         serializer = Calculate1RMSerializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid(raise_exception=True):
+            result = Calculators.calculate_1rm_logic(**serializer.validated_data)
+            result_serializer = CalculatorResultSerializer(data=result)
 
-        reps = serializer.validated_data.get('reps')
-        lifted_weight = serializer.validated_data.get('weight')
-        result = Calculators.calculate_1rm_logic(lifted_weight=lifted_weight, reps=reps)
-
-        return JsonResponse(data={'1rm': result}, status=status.HTTP_200_OK)
+            if result_serializer.is_valid(raise_exception=True):
+                return JsonResponse(data=result_serializer.validated_data)
 
 
 class CalculateWilks(APIView):
@@ -34,16 +33,12 @@ class CalculateWilks(APIView):
     @staticmethod
     def get(request, *args, **kwargs):
         serializer = PointsCalculatorSerializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid(raise_exception=True):
+            result = Calculators.calculate_wilks_logic(**serializer.validated_data)
+            result_serializer = CalculatorResultSerializer(data=result)
 
-        is_female = serializer.validated_data.get('female')
-        body_weight = serializer.validated_data.get('body')
-        lifted_weight = serializer.validated_data.get('lift')
-
-        result = Calculators.calculate_wilks_logic(is_female=is_female, body_weight=body_weight,
-                                                   lifted_weight=lifted_weight)
-
-        return JsonResponse(data={'wilks': result}, status=status.HTTP_200_OK)
+            if result_serializer.is_valid(raise_exception=True):
+                return JsonResponse(data=result_serializer.validated_data)
 
 
 class CalculateDots(APIView):
@@ -54,16 +49,12 @@ class CalculateDots(APIView):
     @staticmethod
     def get(request, *args, **kwargs):
         serializer = PointsCalculatorSerializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid(raise_exception=True):
+            result = Calculators.calculate_dots_logic(**serializer.validated_data)
+            result_serializer = CalculatorResultSerializer(data=result)
 
-        is_female = serializer.validated_data.get('female')
-        body_weight = serializer.validated_data.get('body')
-        lifted_weight = serializer.validated_data.get('lift')
-
-        result = Calculators.calculate_dots_logic(is_female=is_female, body_weight=body_weight,
-                                                  lifted_weight=lifted_weight)
-
-        return JsonResponse(data={'dots': result}, status=status.HTTP_200_OK)
+            if result_serializer.is_valid(raise_exception=True):
+                return JsonResponse(data=result_serializer.validated_data)
 
 
 class CalculateIpfGl(APIView):
@@ -74,16 +65,12 @@ class CalculateIpfGl(APIView):
     @staticmethod
     def get(request, *args, **kwargs):
         serializer = PointsCalculatorSerializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid(raise_exception=True):
+            result = Calculators.calculate_ipf_gl_logic(**serializer.validated_data)
+            result_serializer = CalculatorResultSerializer(data=result)
 
-        is_female = serializer.validated_data.get('female')
-        body_weight = serializer.validated_data.get('body')
-        lifted_weight = serializer.validated_data.get('lift')
-
-        result = Calculators.calculate_ipf_gl_logic(is_female=is_female, body_weight=body_weight,
-                                                    lifted_weight=lifted_weight)
-
-        return JsonResponse(data={'ipf_gl': result}, status=status.HTTP_200_OK)
+            if result_serializer.is_valid(raise_exception=True):
+                return JsonResponse(data=result_serializer.validated_data)
 
 
 class CalculateTotal(APIView):
@@ -94,27 +81,32 @@ class CalculateTotal(APIView):
     @staticmethod
     def get(request, *args, **kwargs):
         serializer = CalculateTotalSerializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid(raise_exception=True):
+            result = Calculators.total_logic(**serializer.validated_data)
+            total_result_serializer = TotalCalculatorResultSerializer(data=result)
 
-        is_female = serializer.validated_data.get('female')
-        body_weight = serializer.validated_data.get('body')
-        squat_weight = serializer.validated_data.get('sq')
-        squat_reps = serializer.validated_data.get('sq_reps')
-        bench_weight = serializer.validated_data.get('bp')
-        bench_reps = serializer.validated_data.get('bp_reps')
-        deadlift_weight = serializer.validated_data.get('dl')
-        deadlift_reps = serializer.validated_data.get('dl_reps')
-
-        result = Calculators.total_logic(is_female=is_female, body_weight=body_weight, squat_weight=squat_weight,
-                                         squat_reps=squat_reps, bench_weight=bench_weight, bench_reps=bench_reps,
-                                         deadlift_weight=deadlift_weight, deadlift_reps=deadlift_reps)
-
-        return JsonResponse(data=result, status=status.HTTP_200_OK)
+            if total_result_serializer.is_valid(raise_exception=True):
+                return JsonResponse(data=total_result_serializer.validated_data)
 
 
+#TODO od tego momentu brak testów do api
 class GetAllBodyParts(generics.ListAPIView):
     serializer_class = BodyPartSerializer
     queryset = BodyPart.objects.all()
+
+
+class CreatePrivateExercise(generics.CreateAPIView): #TODO to jest niby GET zamiast POST
+    queryset = Exercise.objects.all()
+    serializer_class = CreatePrivateExerciseSerializer
+
+
+class DeletePrivateExercise(generics.DestroyAPIView): #TODO a to niby jest GET zamiast DELETE
+    queryset = Exercise.objects.all()
+    serializer_class = DeleteExerciseSerializer
+
+    def get_queryset(self):
+        training_plan = self.request.query_params.get('training_plan')
+        return generics.get_object_or_404(Exercise, id=training_plan)
 
 
 class GetPublicExercises(generics.ListAPIView):
@@ -122,11 +114,20 @@ class GetPublicExercises(generics.ListAPIView):
     queryset = Exercise.objects.filter(public=True)
 
 
-class GetPrivateExercises(generics.ListAPIView):
+class GetPrivateExercises(generics.ListAPIView): #TODO walidacja
+
     serializer_class = GetExercisesSerializer
 
     def get_queryset(self):
-        user = self.request.query_params.get('user')
-        queryset = Exercise.objects.filter(user=user, public=False)
+        queryset = Exercise.objects.filter(user=self.request.user, public=False)
+
+        return queryset
+
+
+class GetUserTrainingPlans(generics.ListAPIView): #TODO walidacja
+    serializer_class = GetUserTrainingPlansSerializer
+
+    def get_queryset(self):
+        queryset = UserTrainingPlans.objects.filter(user=self.request.user)
 
         return queryset
