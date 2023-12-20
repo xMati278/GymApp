@@ -4,7 +4,7 @@ from trainings.models import BodyPart, Exercise, UserTrainingPlans
 
 class Calculate1RMSerializer(serializers.Serializer):
     reps = serializers.IntegerField()
-    weight = serializers.FloatField()
+    lift = serializers.FloatField()
 
 
 class PointsCalculatorSerializer(serializers.Serializer):
@@ -28,7 +28,7 @@ class CalculatorResultSerializer(serializers.Serializer):
     result = serializers.FloatField()
 
 class TotalCalculatorResultSerializer(serializers.Serializer):
-    gender = serializers.StringRelatedField()
+    gender = serializers.CharField()
     weight = serializers.FloatField()
     squat = serializers.FloatField()
     squat_wilks = serializers.FloatField()
@@ -40,6 +40,7 @@ class TotalCalculatorResultSerializer(serializers.Serializer):
     deadlift_wilks = serializers.FloatField()
     deadlift_dots = serializers.FloatField()
     deadlift_ipf_gl = serializers.FloatField()
+    total = serializers.FloatField()
     total_wilks = serializers.FloatField()
     total_dots = serializers.FloatField()
     total_ipf_gl = serializers.FloatField()
