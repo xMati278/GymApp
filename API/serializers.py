@@ -57,17 +57,21 @@ class CreatePrivateExerciseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DeleteExerciseSerializer(serializers.ModelSerializer):
+class ExercisesSerializer(serializers.ModelSerializer):
+    # body_part = BodyPartSerializer(many=True)
+    # body_part = serializers.SerializerMethodField()
+
     class Meta:
         model = Exercise
         fields = '__all__'
 
-class GetExercisesSerializer(serializers.ModelSerializer):
-    body_part = serializers.SerializerMethodField()
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['body_part'] = BodyPartSerializer(
+               instance.body_part.all(), many=True, context=self.context
+            ).data
 
-    class Meta:
-        model = Exercise
-        fields = ['id', 'name', 'body_part', 'user']
+        return representation
 
     @staticmethod
     def get_body_part(obj):
