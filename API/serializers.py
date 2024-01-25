@@ -1,6 +1,13 @@
 from rest_framework import serializers
-from trainings.models import BodyPart, Exercise, UserTrainingPlans
+from trainings.models import BodyPart, Exercise, UserTrainingPlans, Training, TrainingRecord, TrainingExercise,\
+    TrainingPlanExerciseInfo
+from django.contrib.auth.models import User
 
+class RegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
 class Calculate1RMSerializer(serializers.Serializer):
     reps = serializers.IntegerField()
@@ -27,6 +34,7 @@ class CalculateTotalSerializer(serializers.Serializer):
 class CalculatorResultSerializer(serializers.Serializer):
     result = serializers.FloatField()
 
+
 class TotalCalculatorResultSerializer(serializers.Serializer):
     gender = serializers.CharField()
     weight = serializers.FloatField()
@@ -45,16 +53,13 @@ class TotalCalculatorResultSerializer(serializers.Serializer):
     total_dots = serializers.FloatField()
     total_ipf_gl = serializers.FloatField()
 
+
 class BodyPartSerializer(serializers.ModelSerializer):
     class Meta:
         model = BodyPart
         fields = '__all__'
 
 
-class CreatePrivateExerciseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Exercise
-        fields = '__all__'
 
 
 class ExercisesSerializer(serializers.ModelSerializer):
@@ -73,18 +78,43 @@ class ExercisesSerializer(serializers.ModelSerializer):
 
         return representation
 
-    @staticmethod
-    def get_body_part(obj):
-        return [body_part.name for body_part in obj.body_part.all()]
+    # @staticmethod
+    # def get_body_part(obj):
+    #     return [body_part.name for body_part in obj.body_part.all()]
 
 
-class GetUserTrainingPlansSerializer(serializers.ModelSerializer):
+class UserTrainingPlansSerializer(serializers.ModelSerializer):
     exercises = serializers.SerializerMethodField()
 
     class Meta:
         model = UserTrainingPlans
         fields = "__all__"
 
+
     @staticmethod
     def get_exercises(obj):
         return [exercise.name for exercise in obj.exercises.all()]
+
+
+class TrainingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Training
+        fields = "__all__"
+
+
+class TrainingRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainingRecord
+        fields = "__all__"
+
+
+class TrainingExerciseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainingExercise
+        fields = "__all__"
+
+
+class TrainingPlanExerciseInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainingPlanExerciseInfo
+        fields = "__all__"
