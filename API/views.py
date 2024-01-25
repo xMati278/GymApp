@@ -353,4 +353,96 @@ class ReadTrainingRecord(generics.ListAPIView):
 
         return TrainingRecord.objects.get(user=user)
 
-        return queryset
+
+class UpdateTrainingRecord(generics.UpdateAPIView):
+    queryset = TrainingRecord.objects.all()
+    serializer_class = TrainingRecordSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get_object(self) -> TrainingRecord:
+        user = self.request.user.id
+        record_id = self.kwargs.get('pk')
+
+        try:
+            record = TrainingRecord.objects.get(pk=record_id, user=user)
+            return record
+
+        except TrainingRecord.DoesNotExist:
+            self.permission_denied(self.request)
+
+
+class DestroyTrainingRecord(generics.DestroyAPIView):
+    queryset = TrainingRecord.objects.all()
+    serializer_class = TrainingRecordSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get_object(self) -> TrainingRecord:
+        user = self.request.user.id
+        record_id = self.kwargs.get('pk')
+        try:
+            training = TrainingRecord.objects.get(pk=record_id, user=user)
+            return training
+        except TrainingRecord.DoesNotExist:
+            self.permission_denied(self.request)
+
+class CreateTrainingPlanExerciseInfo(generics.CreateAPIView):
+    queryset = TrainingPlanExerciseInfo.objects.all()
+    serializer_class = TrainingPlanExerciseInfoSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+
+class ReadTrainingPlanExerciseInfo(generics.ListAPIView):
+    queryset = TrainingPlanExerciseInfo.objects.all()
+    serializer_class = TrainingPlanExerciseInfoSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get_object(self) -> TrainingPlanExerciseInfo:
+        exercise_info_id = self.kwargs.get('pk')
+        exercise_info = TrainingPlanExerciseInfo.objects.get(pk=exercise_info_id)
+
+        return exercise_info
+
+
+class UpdateTrainingPlanExerciseInfo(generics.UpdateAPIView):
+    queryset = TrainingPlanExerciseInfo.objects.all()
+    serializer_class = TrainingPlanExerciseInfoSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get_object(self):
+        exercise_info_id = self.kwargs.get('pk')
+        exercise_info = TrainingPlanExerciseInfo.objects.get(pk=exercise_info_id)
+
+        return exercise_info
+
+
+class DestroyTrainingPlanExerciseInfo(generics.DestroyAPIView):
+    queryset = TrainingPlanExerciseInfo.objects.all()
+    serializer_class = TrainingPlanExerciseInfoSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get_object(self):
+        exercise_info_id = self.kwargs.get('pk')
+        exercise_info = TrainingPlanExerciseInfo.objects.get(pk=exercise_info_id)
+
+        return exercise_info
+#TODO od tego momentu brak testów do api
+
+
+class CreateTrainingExercise(generics.CreateAPIView):
+    queryset = TrainingExercise.objects.all()
+    serializer_class = TrainingExerciseSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+
+class ReadTrainingExercise(generics.ListAPIView):
+    queryset = TrainingExercise.objects.all()
+    serializer_class = TrainingExerciseSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
