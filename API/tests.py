@@ -286,9 +286,11 @@ class TestApi(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    @tag('x')
     def test_ReadUserTrainingPlans_returns_200_when_provided_correct_data(self):
         response = self.client.get(reverse('read-user-training-plans'), headers=self.auth_header)
         response_data = json.loads(response.content)
+        print(response_data)
 
         self.assertEqual(response_data[0]['name'], 'Test Plan')
         self.assertEqual(response.status_code, status.HTTP_200_OK)

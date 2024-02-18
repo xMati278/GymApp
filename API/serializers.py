@@ -4,6 +4,9 @@ from trainings.models import BodyPart, Exercise, UserTrainingPlans, Training, Tr
 from django.contrib.auth.models import User
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+    email = serializers.CharField(required=True)
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
@@ -93,7 +96,7 @@ class UserTrainingPlansSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_exercises(obj):
-        return [exercise.name for exercise in obj.exercises.all()]
+        return [exercise.id for exercise in obj.exercises.all()]
 
 
 class TrainingSerializer(serializers.ModelSerializer):

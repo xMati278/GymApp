@@ -12,6 +12,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+
 
 class UserRegister(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -19,13 +21,20 @@ class UserRegister(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        username = request.data.get('username', None)
+        username = request.data.get('username')
 
         if User.objects.filter(username=username).exists():
             return Response({'error': 'The user with the given login already exists.'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(data=request.data)
+        mutable_data = request.data.copy()
+
+        password = mutable_data.get('password')
+        hashed_password = make_password(password)
+        mutable_data['password'] = hashed_password
+        print(mutable_data)
+
+        serializer = self.get_serializer(data=mutable_data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
