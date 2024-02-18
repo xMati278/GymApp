@@ -15,6 +15,7 @@ psycopg2 = "^2.9.9"
 bandit = "^1.7.7"
 safety = "^3.0.1"
 ruff = "^0.2.2"
+djangorestframework = "^3.14.0"
 
 
 [build-system]
