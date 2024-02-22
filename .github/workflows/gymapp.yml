@@ -45,7 +45,7 @@ jobs:
       env:
         DB_PASSWORD: postgres
         DB_USER: postgres
-        DB_NAME: postgres
+        DB_NAME: gymapp
         DB_HOST: postgres
         DB_PORT: 5432
     - name: Run Bandit
