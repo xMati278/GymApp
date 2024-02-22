@@ -55,4 +55,10 @@ jobs:
         poetry run ruff API
         poetry run ruff trainings
         poetry run ruff GymApp
+      env:
+        DB_PASSWORD: postgres
+        DB_USER: postgres
+        DB_NAME: postgres
+        DB_HOST: postgres
+        DB_PORT: 5432
 
