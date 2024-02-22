@@ -286,7 +286,6 @@ class TestApi(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @tag('x')
     def test_ReadUserTrainingPlans_returns_200_when_provided_correct_data(self):
         response = self.client.get(reverse('read-user-training-plans'), headers=self.auth_header)
         response_data = json.loads(response.content)
@@ -525,7 +524,12 @@ class TestApi(TestCase):
         print(response_data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response_data['user'], self.user.pk)
+        self.assertEqual(response_data['id'], obj.id)
+        self.assertEqual(response_data['series'], 3)
+        self.assertEqual(response_data['reps'], 5)
+        self.assertEqual(response_data['weight'], 50)
+        self.assertEqual(response_data['training'], self.training.pk)
+        self.assertEqual(response_data['exercise'], self.private_exercise.pk)
 
     def test_CreateTrainingExercise_returns_400_when_not_provided_correct_data(self):
         data = {}
