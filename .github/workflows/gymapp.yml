@@ -16,10 +16,14 @@ jobs:
         python-version: ["3.10"]
 
     services:
-      postgres:
+      db:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -45,8 +49,8 @@ jobs:
       env:
         DB_PASSWORD: postgres
         DB_USER: postgres
-        DB_NAME: gymapp
-        DB_HOST: postgres
+        DB_NAME: postgres
+        DB_HOST: localhost
         DB_PORT: 5432
     - name: Run Bandit
       run: |
