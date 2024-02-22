@@ -521,8 +521,7 @@ class TestApi(TestCase):
         response = self.client.post(reverse('create-training-exercise'), data=data, content_type='application/json',
                                     headers=self.auth_header)
         response_data = json.loads(response.content)
-        print(response_data)
-
+        obj = TrainingExercise.objects.last()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response_data['id'], obj.id)
         self.assertEqual(response_data['series'], 3)
