@@ -43,7 +43,11 @@ jobs:
       run: |
         poetry run python manage.py test
       env:
-        ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        DB_PASSWORD: postgres
+        DB_USER: postgres
+        DB_NAME: postgres
+        DB_HOST: postgres
+        DB_PORT: 5432
     - name: Run Bandit
       run: |
         poetry run bandit -r .
@@ -55,10 +59,5 @@ jobs:
         poetry run ruff API
         poetry run ruff trainings
         poetry run ruff GymApp
-      env:
-        DB_PASSWORD: postgres
-        DB_USER: postgres
-        DB_NAME: postgres
-        DB_HOST: postgres
-        DB_PORT: 5432
+
 
