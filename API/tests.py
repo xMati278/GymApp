@@ -260,7 +260,6 @@ class TestApi(TestCase):
     def test_DeletePrivateExercise_returns_204_when_authorization_token_provided(self):
         response = self.client.delete(reverse('delete-exercise', kwargs={'pk': self.private_exercise.pk}),
                                       content_type='application/json', headers=self.auth_header)
-        data = self.client.get(reverse('read-private-exercises'),headers=self.auth_header)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
