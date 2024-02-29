@@ -6,6 +6,8 @@ from rest_framework import status
 from trainings.models import User, BodyPart, Exercise, UserTrainingPlans, Training, Category, TrainingRecord,\
     TrainingPlanExerciseInfo, TrainingExercise
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils import timezone
+from datetime import datetime
 # Create your tests here.
 
 
@@ -25,7 +27,8 @@ class TestApi(TestCase):
         self.trainingplan = UserTrainingPlans.objects.create(name='Test Plan', user=self.user)
         self.trainingplan.exercises.set([self.public_exercise])
         self.training = Training.objects.create(user_id=self.user.pk, training_plan=self.trainingplan,
-                                                start_time='2024-01-01', end_time='2024-01-01',
+                                                start_time=timezone.make_aware(datetime(2024, 1, 1)),
+                                                end_time=timezone.make_aware(datetime(2024, 1, 1)),
                                                 training_duration='100:0:0')
         self.user_record = TrainingRecord.objects.create(user=self.user, exercise=self.private_exercise,
                                           category=self.onerm_category, value=100)
@@ -259,7 +262,6 @@ class TestApi(TestCase):
                                       content_type='application/json', headers=self.auth_header)
         data = self.client.get(reverse('read-private-exercises'),headers=self.auth_header)
         datajson = json.loads(data.content)
-        print(datajson)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -288,7 +290,6 @@ class TestApi(TestCase):
     def test_ReadUserTrainingPlans_returns_200_when_provided_correct_data(self):
         response = self.client.get(reverse('read-user-training-plans'), headers=self.auth_header)
         response_data = json.loads(response.content)
-        print(response_data)
 
         self.assertEqual(response_data[0]['name'], 'Test Plan')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -320,7 +321,6 @@ class TestApi(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_DeleteUserTrainingPlan_returns_204_when_authorization_token_provided(self):
-        print(self.trainingplan.pk)
         response = self.client.delete(reverse('delete-user-training-plan', kwargs={'pk': self.trainingplan.pk}),
                                       content_type='application/json', headers=self.auth_header)
 
@@ -475,7 +475,6 @@ class TestApi(TestCase):
     def test_ReadTrainingPlanExerciseInfo_returns_200_when_provided_correct_data(self):
         response = self.client.get(reverse('read-training-plan-exercise-info'), headers=self.auth_header)
         response_data = json.loads(response.content)
-        print(response_data)
         self.assertEqual(response_data[0]['reps'], 3)
         self.assertEqual(response_data[0]['exercise'], self.public_exercise.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -545,7 +544,6 @@ class TestApi(TestCase):
     def test_ReadTrainingExercise_returns_200_when_provided_correct_data(self):
         response = self.client.get(reverse('read-training-exercise'), headers=self.auth_header)
         response_data = json.loads(response.content)
-        print(response_data)
 
         self.assertEqual(response_data[0]['training'], self.training.pk)
         self.assertEqual(response_data[0]['reps'], 5)
