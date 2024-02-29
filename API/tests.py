@@ -13,10 +13,8 @@ from django.test import tag
 class TestApi(TestCase):
     def setUp(self) -> None:
         self.xyz = BodyPart.objects.create(name='Chest test')
-        # nosec
-        self.user = User.objects.create_user(username="tester", password='tester')
-        # nosec
-        self.user2 = User.objects.create_user(username="admin", password='admin')
+        self.user = User.objects.create_user(username="tester", password='tester')# nosec B106
+        self.user2 = User.objects.create_user(username="admin", password='admin')# nosec B106
         self.token = RefreshToken.for_user(self.user)
         self.auth_header = {'AUTHORIZATION': f'Bearer {self.token.access_token}'}
         # self.client.credentials = {'HTTP_AUTHORIZATION': f'Bearer {self.token}'}
