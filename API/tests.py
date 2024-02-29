@@ -6,7 +6,6 @@ from rest_framework import status
 from trainings.models import User, BodyPart, Exercise, UserTrainingPlans, Training, Category, TrainingRecord,\
     TrainingPlanExerciseInfo, TrainingExercise
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.test import tag
 # Create your tests here.
 
 
@@ -37,7 +36,7 @@ class TestApi(TestCase):
     @classmethod
     def setUpTestData(cls):
         BodyPart.objects.create(name='Triceps')
-        biceps = BodyPart.objects.create(name='Biceps')
+        BodyPart.objects.create(name='Biceps')
 
     def test_calculate_1rm_logic_returns_valid_data_when_provided_valid_data(self):
         few_reps_response = Calculators.calculate_1rm_logic(lift=100, reps=5)['result']
