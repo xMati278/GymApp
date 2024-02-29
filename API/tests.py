@@ -261,7 +261,6 @@ class TestApi(TestCase):
         response = self.client.delete(reverse('delete-exercise', kwargs={'pk': self.private_exercise.pk}),
                                       content_type='application/json', headers=self.auth_header)
         data = self.client.get(reverse('read-private-exercises'),headers=self.auth_header)
-        datajson = json.loads(data.content)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
