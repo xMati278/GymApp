@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>{% block title %} GymApp - Home {% endblock %}</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}"/>
+    <noscript>
+        <link rel="stylesheet" href="{% static 'assets/css/noscript.css' %}"/>
+    </noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Header -->
+    <header id="header">
+        <a href="" class="logo"><strong>GymApp</strong></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+    <nav id="menu">
+        <ul class="links">
+            <li><a href="{% url 'training_plans' %}">Training Plans</a></li>
+            <li><a href="{% url 'calculator' %}">Calculator</a></li>
+            <li><a href="{% url 'exercises' %}">Exercises</a></li>
+            <li><a href="{% url 'history' %}">History</a></li>
+            <li><a href="{% url 'records' %}">Records</a></li>
+        </ul>
+        <ul class="actions stacked">
+            <li><a href="{% url 'logout' %}" class="button fit">Log Out</a></li>
+        </ul>
+    </nav>
+    <!-- Main -->
+    <div id="main" class="alt">
+        {% block content %}{% endblock %}
+    </div>
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                <li><a href="https://github.com/xMati278/GymApp" class="icon brands alt fa-github"><span class="label">GitHub</span></a>
+                </li>
+            </ul>
+            <ul class="copyright">
+                <li>&copy; 2024, xMati278</li>
+            </ul>
+        </div>
+    </footer>
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery.scrolly.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery.scrollex.min.js' %}"></script>
+<script src="{% static 'assets/js/browser.min.js' %}"></script>
+<script src="{% static 'assets/js/breakpoints.min.js' %}"></script>
+<script src="{% static 'assets/js/util.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

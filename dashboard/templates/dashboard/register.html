@@ -1,0 +1,42 @@
+{% extends "dashboard/landing_page.html" %}
+{% block title %}GymApp - Register{% endblock %}
+{% block content %}
+    <section id="one">
+        <div class="inner">
+            <header class="major">
+                <h1>Register</h1>
+            </header>
+
+            <!-- Form -->
+            {% if form.non_field_errors %}
+                <div class="error">
+                    <h4>{{ form.non_field_errors }}</h4>
+                </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="row gtr-uniform">
+                    <div class="col-6 col-12-xsmall">
+                        {{ form.username }}
+                    </div>
+                    <div class="col-6 col-12-xsmall">
+                        {{ form.password }}
+                    </div>
+                    <div class="col-6 col-12-xsmall">
+                        {{ form.email }}
+                    </div>
+                    <!-- Break -->
+                    <div class="col-12">
+                        <ul class="actions">
+                            <li><input type="submit" value="Sign up" class="primary"/></li>
+                            <li><input type="button" value="Login" onclick="window.location.href='{% url 'login' %}'"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </section>
+{% endblock %}
