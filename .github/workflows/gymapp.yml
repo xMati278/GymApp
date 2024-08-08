@@ -1,4 +1,4 @@
-name: GymApp CI
+name: dashboard CI
 
 on:
   push:

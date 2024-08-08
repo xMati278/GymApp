@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>GymApp - Login</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href={% static 'assets/css/main.css' %} />
+		<noscript><link rel="stylesheet" href={% static 'assets/css/noscript.css' %} /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main" class="alt">
+
+						<!-- One -->
+							<section id="one">
+								<div class="inner">
+									<header class="major">
+										<h1>LOGIN</h1>
+									</header>
+                                    
+												<!-- Form -->
+                                                    <h4> Error label</h4>
+													<form method="post" action="#">
+														<div class="row gtr-uniform">
+															<div class="col-6 col-12-xsmall">
+																<input type="text" name="login-username" id="login-username" value="" placeholder="Username" />
+															</div>
+															<div class="col-6 col-12-xsmall">
+																<input type="password" name="login-password" id="login-password" value="" placeholder="Password" />
+															</div>
+                                                            
+															<!-- Break -->
+															<div class="col-12">
+																<ul class="actions">
+																	<li><input type="submit" value="Login" class="primary" /></li>
+																	<li><input type="reset" value="Sign up" /></li>
+																</ul>
+															</div>
+														</div>
+													</form>
+                                    
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<ul class="icons">
+								<li><a href="https://github.com/xMati278/GymApp" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+							<ul class="copyright">
+								<li>&copy; xMati278, 2024</li>
+							</ul>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src={% static 'assets/js/jquery.min.js' %}></script> 
+			<script src={% static 'assets/js/jquery.scrolly.min.js' %}></script>
+			<script src={% static 'assets/js/jquery.scrollex.min.js' %}></script>
+			<script src={% static 'assets/js/browser.min.js' %}></script>
+			<script src={% static 'assets/js/breakpoints.min.js' %}></script>
+			<script src={% static 'assets/js/util.js' %}></script>
+			<script src={% static 'assets/js/main.js' %}></script>
+
+	</body>
+</html>

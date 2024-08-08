@@ -1,5 +1,5 @@
 """
-WSGI config for GymApp project.
+WSGI config for dashboard project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
