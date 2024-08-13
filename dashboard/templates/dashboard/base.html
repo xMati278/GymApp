@@ -16,7 +16,7 @@
 <div id="wrapper">
     <!-- Header -->
     <header id="header">
-        <a href="" class="logo"><strong>GymApp</strong></a>
+        <a href="{% url 'training_plans' %}" class="logo"><strong>GymApp</strong></a>
         <nav>
             <a href="#menu">Menu</a>
         </nav>
@@ -30,7 +30,12 @@
             <li><a href="{% url 'records' %}">Records</a></li>
         </ul>
         <ul class="actions stacked">
-            <li><a href="{% url 'logout' %}" class="button fit">Log Out</a></li>
+            <li>
+                <form id="logout-form" method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button fit">Log Out</button>
+                </form>
+            </li>
         </ul>
     </nav>
     <!-- Main -->

@@ -1,0 +1,22 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}GymApp - Calculator Result{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <div id="main" class="alt">
+            <h2>Calculation Result</h2>
+            {% if calculator_result %}
+                <div class="col-6 col-12-small">
+                    {% for key, value in calculator_result.items %}
+                        <h4>{{ key }}: {{ value }}</h4>
+                
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <a href="{% url 'calculator' %}" class='button fit'> Back </a>
+
+        </div>
+    </div>
+
+{% endblock %}

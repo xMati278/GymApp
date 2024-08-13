@@ -37,6 +37,14 @@ class RegisterForm(forms.Form):
             'id': 'register-password'
         })
     )
+    retype_password = forms.CharField(
+        max_length=100,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Retype Password',
+            'id': 'retype-password'
+        })
+    )
     email = forms.EmailField(
         max_length=100,
         widget=forms.EmailInput(attrs={

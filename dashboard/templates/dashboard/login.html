@@ -1,4 +1,4 @@
-{% extends "dashboard/landing_page.html" %}
+{% extends "dashboard/auth_base.html" %}
 
 {% block title %}GymApp - Login{% endblock %}
 
@@ -18,22 +18,26 @@
 
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
-                <div class="row gtr-uniform">
-                    <div class="col-6 col-12-xsmall">
-                        {{ form.username }}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="alert alert-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
                     </div>
-                    <div class="col-6 col-12-xsmall">
-                        {{ form.password }}
-                    </div>
-                    <!-- Break -->
-                    <div class="col-12">
-                        <ul class="actions">
-                            <li><input type="submit" value="Login" class="primary"/></li>
-                            <li><input type="button" value="Sign up"
-                                       onclick="window.location.href='{% url 'register' %}'"/>
-                            </li>
-                        </ul>
-                    </div>
+                    <br>
+                {% endfor %}
+                <!-- Break -->
+                <div class="col-12">
+                    <ul class="actions">
+                        <li><input type="submit" value="Login" class="primary"/></li>
+                        <li><input type="button" value="Sign up"
+                                   onclick="window.location.href='{% url 'register' %}'"/>
+                        </li>
+                    </ul>
                 </div>
             </form>
         </div>
