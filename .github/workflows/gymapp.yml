@@ -45,7 +45,9 @@ jobs:
         poetry install
     - name: Run Tests
       run: |
-        poetry run python manage.py test
+        poetry run coverage run manage.py test
+        poetry run coverage report
+        poetry run coverage xml
       env:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_USER: ${{ secrets.DB_USER }}
