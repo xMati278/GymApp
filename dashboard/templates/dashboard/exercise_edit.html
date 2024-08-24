@@ -1,0 +1,19 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Edit {{ exercise.name }}{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <h1>Edit Exercise</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <label>
+                <button type="submit" class="button fit">Save Changes</button>
+            </label>
+        </form>
+        <label>
+            <a href="{% url 'exercise_detail' exercise.id %}" class='button fit'>Cancel</a>
+        </label>
+    </div>
+{% endblock %}

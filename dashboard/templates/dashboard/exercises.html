@@ -5,6 +5,46 @@
 {% block content %}
     <div class="inner">
         <h1>Exercises</h1>
-    </div>
 
+<form method="GET" action="">
+    <label>
+        <input type="text" name="search" placeholder="Search for exercises..." value="{{ search }}">
+    </label>
+    <label>
+        <select name="sort_by">
+            <option value="name" {% if sort_by == 'name' %}selected{% endif %}>All</option>
+            <option value="public" {% if sort_by == 'public' %}selected{% endif %}>Sort by Public</option>
+            <option value="private" {% if sort_by == 'private' %}selected{% endif %}>Sort by Private</option>
+        </select>
+    </label>
+    <label>
+        <select name="body_part">
+            <option value="" {% if not selected_body_part %}selected{% endif %}>Body Part</option>
+            {% for part in body_parts %}
+                <option value="{{ part.id }}" {% if part.id|stringformat:"s" == selected_body_part %}selected{% endif %}>
+                    {{ part.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+    <button type="submit">Search</button>
+</form>
+
+        {% if exercise_list %}
+            <ul>
+                {% for exercise in exercise_list %}
+                    <h4>
+                        <a href="{% url 'exercise_detail' exercise.pk %}">
+                            {{ exercise.name }}
+                            {% if not exercise.public %}
+                                (Your)
+                            {% endif %}
+                        </a>
+                    </h4>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>There are no Exercises.</p>
+        {% endif %}
+    </div>
 {% endblock %}

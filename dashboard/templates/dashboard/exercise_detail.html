@@ -1,0 +1,30 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}GymApp - {{ exercise.name }}{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <h1>{{ exercise.name }}</h1>
+        <p><strong>Body Part(s):</strong>
+            {% for part in exercise.body_part.all %}
+                {{ part.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p><strong>Visibility:</strong>
+            {% if exercise.public %}
+                Public
+            {% else %}
+                You
+            {% endif %}
+        </p>
+        <label>
+            <a href="{% url 'exercises' %}" class='button fit'> Back </a>
+        </label>
+        {% if not exercise.public and exercise.user == request.user %}
+            <label>
+                <a href="{% url 'exercise_edit' exercise.id %}" class='button fit'>Edit Exercise</a>
+            </label>
+        {% endif %}
+
+    </div>
+{% endblock %}

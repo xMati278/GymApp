@@ -14,6 +14,7 @@ from pathlib import Path
 from .env import env
 import os
 from django.urls import reverse_lazy
+from django.conf.urls import handler404
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,7 +34,10 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 APPEND_SLASH = True
 
+HANDLER4O4 = reverse_lazy('')
+
 # Application definition
+
 
 INSTALLED_APPS = [
     'rest_framework',
@@ -60,7 +64,6 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('training_plans')
 
 INSTALLED_EXTENSIONS = [
     'trainings',

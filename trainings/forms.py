@@ -1,8 +1,8 @@
 from django import forms
-
+from .models import Exercise
 
 class CalculatorForm(forms.Form):
-    gender = forms.ChoiceField(
+    female = forms.ChoiceField(
         choices=[(False, 'Male'), (True, 'Female')],
         label='Gender',
         widget=forms.Select(attrs={
@@ -78,3 +78,9 @@ class CalculatorForm(forms.Form):
         gender = self.cleaned_data['gender']
 
         return False if gender == 'male' else True
+
+
+class ExerciseForm(forms.ModelForm):
+    class Meta:
+        model = Exercise
+        fields = ['name', 'body_part']

@@ -5,17 +5,35 @@
 {% block content %}
     <div class="inner">
         <div id="main" class="alt">
-            <h2>Calculation Result</h2>
-            {% if calculator_result %}
-                <div class="col-6 col-12-small">
-                    {% for key, value in calculator_result.items %}
-                        <h4>{{ key }}: {{ value }}</h4>
-                
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <a href="{% url 'calculator' %}" class='button fit'> Back </a>
 
+            <h3>Table</h3>
+
+            <h4>Calculation Result</h4>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    {% if calculator_result %}
+                        <div class="col-6 col-12-small">
+                            {% for key, value in calculator_result.items %}
+                                <tr>
+                                    <td>{{ key }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                </table>
+            </div>
+            <a href="{% url 'calculator' %}" class='button fit'> Back </a>
         </div>
     </div>
 
