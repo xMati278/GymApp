@@ -1,0 +1,15 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <h1>Confirm Delete</h1>
+        <p>Are you sure you want to delete "{{ object.name }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, delete</button>
+            <a href="{% url 'exercises' %}" class="button">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

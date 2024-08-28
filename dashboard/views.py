@@ -6,11 +6,11 @@ from trainings.forms import CalculatorForm
 from trainings.calculators import Calculators
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
 from trainings.models import Exercise, BodyPart
 from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
-from trainings.forms import ExerciseForm
+from trainings.forms import ExerciseForm, CreateExerciseForm
 
 
 class LoginView(FormView):
@@ -181,9 +181,28 @@ class ExerciseEditView(UpdateView):
 
 class AddExerciseView(CreateView):
     model = Exercise
-    form_class = ExerciseForm
+    form_class = CreateExerciseForm
     template_name = 'dashboard/add_exercise.html'
     success_url = reverse_lazy('exercises')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        return response
+
+class DeleteExerciseView(DeleteView):
+    model = Exercise
+    template_name = 'dashboard/confirm_delete.html'
+    success_url = reverse_lazy('exercises')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise PermissionError("Yoy do not have permission to delete this exercise.")
 
 
 def records_view(request): #TODO do zrobienia

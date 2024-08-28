@@ -84,3 +84,22 @@ class ExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
         fields = ['name', 'body_part']
+
+
+class CreateExerciseForm(forms.ModelForm):
+    class Meta:
+        model = Exercise
+        fields = ['name', 'body_part']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        exercise = super().save(commit=False)
+        if self.user:
+            exercise.user = self.user
+        if commit:
+            exercise.save()
+
+        return exercise
