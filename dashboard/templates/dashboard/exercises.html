@@ -6,33 +6,35 @@
     <div class="inner">
         <h1>Exercises</h1>
 
-<form method="GET" action="">
-    <label>
-        <input type="text" name="search" placeholder="Search for exercises..." value="{{ search }}">
-    </label>
-    <label>
-        <select name="sort_by">
-            <option value="name" {% if sort_by == 'name' %}selected{% endif %}>All</option>
-            <option value="public" {% if sort_by == 'public' %}selected{% endif %}>Sort by Public</option>
-            <option value="private" {% if sort_by == 'private' %}selected{% endif %}>Sort by Private</option>
-        </select>
-    </label>
-    <label>
-        <select name="body_part">
-            <option value="" {% if not selected_body_part %}selected{% endif %}>Body Part</option>
-            {% for part in body_parts %}
-                <option value="{{ part.id }}" {% if part.id|stringformat:"s" == selected_body_part %}selected{% endif %}>
-                    {{ part.name }}
-                </option>
-            {% endfor %}
-        </select>
-    </label>
-    <button type="submit">Search</button>
-</form>
+        <form method="GET" action="">
+            <label>
+                <input type="text" name="search" placeholder="Search for exercises..." value="{{ search }}">
+            </label>
+            <label>
+                <select name="sort_by">
+                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>All</option>
+                    <option value="public" {% if sort_by == 'public' %}selected{% endif %}>Public Exercises</option>
+                    <option value="private" {% if sort_by == 'private' %}selected{% endif %}>Your Exercises</option>
+                </select>
+            </label>
+            <label>
+                <select name="body_part">
+                    <option value="" {% if not selected_body_part %}selected{% endif %}>Body Part</option>
+                    {% for part in body_parts %}
+                        <option value="{{ part.id }}"
+                                {% if part.id|stringformat:"s" == selected_body_part %}selected{% endif %}>
+                            {{ part.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <button type="submit">Search</button>
+            <a href="{% url 'add_exercise' %}" class="button">Add Exercise</a>
+        </form>
 
-        {% if exercise_list %}
+        {% if page_obj %}
             <ul>
-                {% for exercise in exercise_list %}
+                {% for exercise in page_obj %}
                     <h4>
                         <a href="{% url 'exercise_detail' exercise.pk %}">
                             {{ exercise.name }}
@@ -43,6 +45,30 @@
                     </h4>
                 {% endfor %}
             </ul>
+            
+{% if page_obj.paginator.num_pages > 1 %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&sort_by={{ sort_by }}&body_part={{ selected_body_part }}"
+                   class="button small">Prev</a>
+            </li>
+        {% else %}
+            <li><span class="button small disabled">Prev</span></li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <li>
+                <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&sort_by={{ sort_by }}&body_part={{ selected_body_part }}"
+                   class="button small">Next</a>
+            </li>
+        {% else %}
+            <li><span class="button small disabled">Next</span></li>
+        {% endif %}
+    </ul>
+{% endif %}
+
+
         {% else %}
             <p>There are no Exercises.</p>
         {% endif %}

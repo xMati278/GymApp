@@ -6,7 +6,7 @@ from trainings.forms import CalculatorForm
 from trainings.calculators import Calculators
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView
 from trainings.models import Exercise, BodyPart
 from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
@@ -131,9 +131,11 @@ class ExercisesView(ListView):
         if sort_by == 'name':
             queryset = queryset.order_by('name')
         elif sort_by == 'public':
-            queryset = queryset.filter(public=True)
+            queryset = queryset.filter(public=True).order_by('name')
         elif sort_by == 'private':
-            queryset = queryset.filter(public=False)
+            queryset = queryset.filter(public=False).order_by('name')
+        else:
+            queryset = queryset.order_by('name')
 
         return queryset.distinct()
 
@@ -175,6 +177,14 @@ class ExerciseEditView(UpdateView):
         form.fields['body_part'].help_text = None
         form.fields['name'].help_text = None
         return form
+
+
+class AddExerciseView(CreateView):
+    model = Exercise
+    form_class = ExerciseForm
+    template_name = 'dashboard/add_exercise.html'
+    success_url = reverse_lazy('exercises')
+
 
 def records_view(request): #TODO do zrobienia
     return render(request, 'dashboard/records.html')

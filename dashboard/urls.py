@@ -18,6 +18,7 @@ urlpatterns = [
     path('exercises/', views.ExercisesView.as_view(), name='exercises'),
     path('exercises/<int:pk>/', views.ExerciseDetailView.as_view(), name='exercise_detail'),
     path('exercise/<int:pk>/edit/', views.ExerciseEditView.as_view(), name='exercise_edit'),
+    path('exercise/add/', views.AddExerciseView.as_view(), name='add_exercise'),
 
     path('records/', views.records_view, name='records'),
     path('', RedirectView.as_view(pattern_name='training_plans', permanent=False), name='home'),
