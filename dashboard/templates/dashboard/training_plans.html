@@ -3,20 +3,59 @@
 {% block content %}
     <div class="inner">
         <h1>Training Plans</h1>
-        <a href="{% url 'create_training_plan' %}" class="button fit">CREATE</a>
+    
+        <label>
+            <a href="{% url 'create_training_plan' %}" class="button fit">CREATE</a>
+        </label>
+    
         {% if page_obj %}
             <ul>
                 {% for plan in page_obj %}
-                    <h1>
+                    <h2>
                         <a href="{% url 'training_plan_detail' plan.pk %}">
                             {{ plan.name }}
                         </a>
-                    </h1>
+                    </h2>
                 {% empty %}
                     <li>No Training Plans</li>
                 {% endfor %}
             </ul>
-        {% endif %}
-    </div>
 
+        {% endif %}
+            <ul class="pagination">
+            {% if page_obj.paginator.num_pages > 1 %}
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}" class="button small">Prev</a></li>
+
+                    {% if page_obj.number > 3 %}
+                        <li><a href="?page=1" class="page">1</a></li>
+                        {% if page_obj.number > 4 %}
+                            <li><span>...</span></li>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li><a href="?page={{ num }}" class='page'>{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li><a href="?page={{ num }}" class="page">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                        <li><span>...</span></li>
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}"
+                               class="page">{{ page_obj.paginator.num_pages }}</a></li>
+                    {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}"
+                               class="page">{{ page_obj.paginator.num_pages }}</a></li>
+                    {% endif %}
+
+                    <li><a href="?page={{ page_obj.next_page_number }}" class="button small">Next</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </div>
 {% endblock %}
