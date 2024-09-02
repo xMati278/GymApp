@@ -120,7 +120,7 @@ class CreateExerciseForm(forms.ModelForm):
         return exercise
 
 
-class CreateTrainingPlan(forms.ModelForm):
+class CreateTrainingPlanForm(forms.ModelForm):
     name = forms.CharField(
         help_text=""
     )
@@ -141,3 +141,13 @@ class CreateTrainingPlan(forms.ModelForm):
             training_plan.save()
 
         return training_plan
+
+
+class UpdateTrainingPlanForm(forms.ModelForm):
+    name = forms.CharField(
+        help_text=""
+    )
+
+    class Meta:
+        model = UserTrainingPlans
+        fields = ['name']

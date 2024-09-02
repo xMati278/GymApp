@@ -18,7 +18,8 @@ urlpatterns = [
 
     path('training_plans/', views.ReadTrainingPlans.as_view(), name='training_plans'),
     path('create_training_plan/', views.CreateTrainingPlans.as_view(), name='create_training_plan'),
-    path('training_plans/<int:pk>', views.TrainingPlanDetailView.as_view(), name='training_plan_detail'),
+    path('training_plan/<int:pk>', views.TrainingPlanDetailView.as_view(), name='training_plan_detail'),
+    path('training_plan/edit/<int:pk>', views.TrainingPlanEditView.as_view(), name='training_plan_edit'),
 
 
     path('history/', views.history_view, name='history'),

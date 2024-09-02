@@ -12,6 +12,9 @@
                 <strong>Exercises:</strong> {{ exercises_info|default:"-" }}
             </li>
         </ul>
+                        <label>
+            <a href="{% url 'training_plan_edit' training_plan.pk %}" class='button fit'> Edit </a>
+        </label>
         <label>
             <a href="{% url 'training_plans' %}" class='button fit'> Back </a>
         </label>

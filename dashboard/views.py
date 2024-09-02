@@ -10,7 +10,7 @@ from django.views.generic import TemplateView, ListView, DetailView, UpdateView,
 from trainings.models import Exercise, BodyPart, UserTrainingPlans
 from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
-from trainings.forms import ExerciseForm, CreateExerciseForm, CreateTrainingPlan
+from trainings.forms import ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm
 
 
 class LoginView(FormView):
@@ -99,7 +99,7 @@ class CalculatorResultView(TemplateView):
 
 class CreateTrainingPlans(CreateView):
     model = Exercise
-    form_class = CreateTrainingPlan
+    form_class = CreateTrainingPlanForm
     template_name = 'dashboard/training_plan_create.html'
     success_url = reverse_lazy('training_plans')
 
@@ -135,6 +135,16 @@ class TrainingPlanDetailView(DetailView):
         context['last_training'] = training_plan.last_training
         context['exercises'] = training_plan.exercises_info
         return context
+
+
+class TrainingPlanEditView(UpdateView):
+    model = UserTrainingPlans
+    form_class = UpdateTrainingPlanForm
+    template_name = 'dashboard/training_plan_edit.html'
+    context_object_name = 'training_plan'
+
+    def get_success_url(self):
+        return reverse_lazy('training_plan_detail', kwargs={'pk': self.object.pk})
 
 
 def history_view(request): #TODO do zrobienia
