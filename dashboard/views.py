@@ -112,7 +112,8 @@ class CreateTrainingPlans(CreateView):
         response = super().form_valid(form)
         return response
 
-class ReadTrainingPlans(ListView): #TODO do zrobienia
+
+class ReadTrainingPlans(ListView):
     template_name = 'dashboard/training_plans.html'
     paginate_by = 10
     model = UserTrainingPlans
@@ -214,7 +215,7 @@ class ExerciseEditView(UpdateView):
         return form
 
 
-class AddExerciseView(CreateView):
+class CreateExerciseView(CreateView):
     model = Exercise
     form_class = CreateExerciseForm
     template_name = 'dashboard/exercise_create.html'
