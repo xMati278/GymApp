@@ -1,5 +1,7 @@
 from django import forms
-from .models import Exercise
+from .models import Exercise, UserTrainingPlans, BodyPart
+
+
 
 class CalculatorForm(forms.Form):
     female = forms.ChoiceField(
@@ -87,9 +89,22 @@ class ExerciseForm(forms.ModelForm):
 
 
 class CreateExerciseForm(forms.ModelForm):
+    name = forms.CharField(
+        help_text="",
+        required=True
+    )
+    body_part = forms.ModelMultipleChoiceField(
+        queryset=BodyPart.objects.all().order_by('name'),
+        widget=forms.SelectMultiple(attrs={
+            'size': '14',
+            'style': 'height: auto',
+        }),
+        help_text=''
+    )
     class Meta:
         model = Exercise
         fields = ['name', 'body_part']
+
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -103,3 +118,26 @@ class CreateExerciseForm(forms.ModelForm):
             exercise.save()
 
         return exercise
+
+
+class CreateTrainingPlan(forms.ModelForm):
+    name = forms.CharField(
+        help_text=""
+    )
+
+    class Meta:
+        model = UserTrainingPlans
+        fields = ['name']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        training_plan = super().save(commit=False)
+        if self.user:
+            training_plan.user = self.user
+        if commit:
+            training_plan.save()
+
+        return training_plan

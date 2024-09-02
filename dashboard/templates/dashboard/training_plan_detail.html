@@ -1,0 +1,19 @@
+{% extends "dashboard/base.html" %}
+{% block title %}GymApp - {{ training_plan.name }}{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <h2>{{ training_plan.name }}</h2>
+        <ul>
+            <li>
+                <strong>Last Training:</strong> {{ last_training|default:"-" }}
+            </li>
+            <li>
+                <strong>Exercises:</strong> {{ exercises_info|default:"-" }}
+            </li>
+        </ul>
+        <label>
+            <a href="{% url 'training_plans' %}" class='button fit'> Back </a>
+        </label>
+    </div>
+{% endblock %}

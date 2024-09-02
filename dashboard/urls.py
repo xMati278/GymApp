@@ -16,7 +16,9 @@ urlpatterns = [
     path('calculator_result/', views.CalculatorResultView.as_view(), name='calculator_result'),
 
 
-    path('training_plans/', views.training_plans_view, name='training_plans'),
+    path('training_plans/', views.ReadTrainingPlans.as_view(), name='training_plans'),
+    path('create_training_plan/', views.CreateTrainingPlans.as_view(), name='create_training_plan'),
+    path('training_plans/<int:pk>', views.TrainingPlanDetailView.as_view(), name='training_plan_detail'),
 
 
     path('history/', views.history_view, name='history'),
@@ -26,7 +28,7 @@ urlpatterns = [
     path('exercises/<int:pk>/', views.ExerciseDetailView.as_view(), name='exercise_detail'),
     path('exercise/<int:pk>/edit/', views.ExerciseEditView.as_view(), name='exercise_edit'),
     path('exercise/add/', views.AddExerciseView.as_view(), name='add_exercise'),
-    path('exercise/<int:pk>/delete', views.DeleteExerciseView.as_view(), name='delete_exercise'),
+    path('exercise/<int:pk>/delete/', views.DeleteExerciseView.as_view(), name='delete_exercise'),
 
 
     path('records/', views.records_view, name='records'),

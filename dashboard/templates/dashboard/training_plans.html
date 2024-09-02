@@ -3,6 +3,20 @@
 {% block content %}
     <div class="inner">
         <h1>Training Plans</h1>
+        <a href="{% url 'create_training_plan' %}" class="button fit">CREATE</a>
+        {% if page_obj %}
+            <ul>
+                {% for plan in page_obj %}
+                    <h1>
+                        <a href="{% url 'training_plan_detail' plan.pk %}">
+                            {{ plan.name }}
+                        </a>
+                    </h1>
+                {% empty %}
+                    <li>No Training Plans</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 
 {% endblock %}

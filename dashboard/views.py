@@ -7,10 +7,10 @@ from trainings.calculators import Calculators
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
-from trainings.models import Exercise, BodyPart
+from trainings.models import Exercise, BodyPart, UserTrainingPlans
 from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
-from trainings.forms import ExerciseForm, CreateExerciseForm
+from trainings.forms import ExerciseForm, CreateExerciseForm, CreateTrainingPlan
 
 
 class LoginView(FormView):
@@ -97,8 +97,43 @@ class CalculatorResultView(TemplateView):
         return context
 
 
-def training_plans_view(request): #TODO do zrobienia
-    return render(request, 'dashboard/training_plans.html')
+class CreateTrainingPlans(CreateView):
+    model = Exercise
+    form_class = CreateTrainingPlan
+    template_name = 'dashboard/training_plan_create.html'
+    success_url = reverse_lazy('training_plans')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        return response
+
+class ReadTrainingPlans(ListView): #TODO do zrobienia
+    template_name = 'dashboard/training_plans.html'
+    paginate_by = 10
+    model = UserTrainingPlans
+
+    def get_queryset(self):
+        user = self.request.user
+        return UserTrainingPlans.objects.filter(user=user)
+
+
+class TrainingPlanDetailView(DetailView):
+    model = UserTrainingPlans
+    template_name = 'dashboard/training_plan_detail.html'
+    context_object_name = 'training_plan'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        training_plan = self.get_object()
+
+        context['last_training'] = training_plan.last_training
+        context['exercises'] = training_plan.exercises_info
+        return context
 
 
 def history_view(request): #TODO do zrobienia
@@ -182,7 +217,7 @@ class ExerciseEditView(UpdateView):
 class AddExerciseView(CreateView):
     model = Exercise
     form_class = CreateExerciseForm
-    template_name = 'dashboard/add_exercise.html'
+    template_name = 'dashboard/exercise_create.html'
     success_url = reverse_lazy('exercises')
 
     def get_form_kwargs(self):
@@ -194,15 +229,17 @@ class AddExerciseView(CreateView):
         response = super().form_valid(form)
         return response
 
+
 class DeleteExerciseView(DeleteView):
     model = Exercise
-    template_name = 'dashboard/confirm_delete.html'
+    template_name = 'dashboard/exercise_delete.html'
     success_url = reverse_lazy('exercises')
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
             raise PermissionError("Yoy do not have permission to delete this exercise.")
+        return obj
 
 
 def records_view(request): #TODO do zrobienia

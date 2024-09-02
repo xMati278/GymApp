@@ -45,32 +45,43 @@
                     </h4>
                 {% endfor %}
             </ul>
-            
-{% if page_obj.paginator.num_pages > 1 %}
-    <ul class="pagination">
-        {% if page_obj.has_previous %}
-            <li>
-                <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&sort_by={{ sort_by }}&body_part={{ selected_body_part }}"
-                   class="button small">Prev</a>
-            </li>
-        {% else %}
-            <li><span class="button small disabled">Prev</span></li>
         {% endif %}
 
-        {% if page_obj.has_next %}
-            <li>
-                <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&sort_by={{ sort_by }}&body_part={{ selected_body_part }}"
-                   class="button small">Next</a>
-            </li>
-        {% else %}
-            <li><span class="button small disabled">Next</span></li>
-        {% endif %}
-    </ul>
-{% endif %}
+        <ul class="pagination">
+            {% if page_obj.paginator.num_pages > 1 %}
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}" class="button small">Prev</a></li>
 
+                    {% if page_obj.number > 3 %}
+                        <li><a href="?page=1" class="page">1</a></li>
+                        {% if page_obj.number > 4 %}
+                            <li><span>...</span></li>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
 
-        {% else %}
-            <p>There are no Exercises.</p>
-        {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li><a href="?page={{ num }}" class='page'>{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li><a href="?page={{ num }}" class="page">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                        <li><span>...</span></li>
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}"
+                               class="page">{{ page_obj.paginator.num_pages }}</a></li>
+                    {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}"
+                               class="page">{{ page_obj.paginator.num_pages }}</a></li>
+                    {% endif %}
+
+                    <li><a href="?page={{ page_obj.next_page_number }}" class="button small">Next</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
     </div>
+
 {% endblock %}

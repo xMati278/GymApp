@@ -1,0 +1,17 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}GymApp - Create Training Plan{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <h1>Create Training Plan</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button fit">Create</button>
+        </form>
+        <label>
+            <a href="{% url 'training_plans' %}" class='button fit'> Back </a>
+        </label>
+    </div>
+{% endblock %}
