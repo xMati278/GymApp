@@ -15,10 +15,6 @@
                         {% for exercise_info in training_plan.exercises_info.all %}
                             <li>
                                 {{ exercise_info.exercise.name }} - Series: {{ exercise_info.series }}, Reps: {{ exercise_info.reps }}
-                                <form method="POST" action="{% url 'delete_exercise_from_plan' exercise_info.pk %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="button small">Remove</button>
-                                </form>
                             </li>
                         {% endfor %}
                     </ul>
@@ -33,9 +29,5 @@
         <label>
             <a href="{% url 'training_plans' %}" class='button fit'> Back </a>
         </label>
-        <form method="POST" action="{% url 'delete_training_plan' training_plan.pk %}">
-            {% csrf_token %}
-            <button type="submit" class="button fit">Delete Training Plan</button>
-        </form>
     </div>
 {% endblock %}

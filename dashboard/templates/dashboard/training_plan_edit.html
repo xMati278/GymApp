@@ -9,45 +9,52 @@
             {% csrf_token %}
             {{ form.as_p }}
 
+                    {% if training_plan.exercises_info.all %}
+            <h2>Exercises</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Exercise</th>
+                    <th>Sets</th>
+                    <th>Repetitions</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for exercise_info in training_plan.exercises_info.all %}
+                    <tr>
+                        <td>{{ exercise_info.exercise.name }}</td>
+                        <td>{{ exercise_info.series }}</td>
+                        <td>{{ exercise_info.reps }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'delete_exercise_from_plan' exercise_info.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="button small">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+            
             <label>
-                <a href="{% url 'add_exercise' %}" class="button fit">Add Exercise</a>
+                <a href="{% url 'exercises' %}" class="button fit">Add Exercise</a>
             </label>
 
             <label>
                 <button type="submit" class="button fit">Save Changes</button>
             </label>
+
+            <form method="POST" action="{% url 'delete_training_plan' training_plan.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="button fit">Delete Training Plan</button>
+            </form>
+
         </form>
         <label>
             <a href="{% url 'training_plan_detail' training_plan.pk %}" class='button fit'>Cancel</a>
         </label>
-
-        {% if training_plan.exercises_info.all %}
-            <h2>Selected Exercises</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Exercise</th>
-                        <th>Sets</th>
-                        <th>Repetitions</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for exercise_info in training_plan.exercises_info.all %}
-                        <tr>
-                            <td>{{ exercise_info.exercise.name }}</td>
-                            <td>{{ exercise_info.series }}</td>
-                            <td>{{ exercise_info.reps }}</td>
-                            <td>
-                                <form method="POST" action="{% url 'delete_exercise_from_plan' exercise_info.pk %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="button small">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+    
     </div>
 {% endblock %}

@@ -287,7 +287,7 @@ class DeleteExerciseView(DeleteView):
 
 class DeleteExerciseFromPlanView(DeleteView):
     model = TrainingPlanExerciseInfo
-    template_name = 'dashboard/confirm_delete.html'
+    template_name = 'dashboard/confirm_delete_training_plan_exercise.html'
 
     def get_success_url(self):
         training_plan = self.object.training_plans.first()
