@@ -25,7 +25,6 @@ class TestApi(TestCase):
         self.private_exercise = Exercise.objects.create(name='Private Chest Press', user=self.user)
         self.private_exercise.body_part.set([self.xyz])
         self.trainingplan = UserTrainingPlans.objects.create(name='Test Plan', user=self.user)
-        self.trainingplan.exercises.set([self.public_exercise])
         self.training = Training.objects.create(user_id=self.user.pk, training_plan=self.trainingplan,
                                                 start_time=timezone.make_aware(datetime(2024, 1, 1)),
                                                 end_time=timezone.make_aware(datetime(2024, 1, 1)),

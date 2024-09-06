@@ -87,16 +87,10 @@ class ExercisesSerializer(serializers.ModelSerializer):
 
 
 class UserTrainingPlansSerializer(serializers.ModelSerializer):
-    exercises = serializers.SerializerMethodField()
-
     class Meta:
         model = UserTrainingPlans
         fields = "__all__"
 
-
-    @staticmethod
-    def get_exercises(obj):
-        return [exercise.id for exercise in obj.exercises.all()]
 
 
 class TrainingSerializer(serializers.ModelSerializer):
