@@ -7,11 +7,10 @@ from trainings.calculators import Calculators
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
-from trainings.models import Exercise, BodyPart, UserTrainingPlans
+from trainings.models import Exercise, BodyPart, UserTrainingPlans, TrainingPlanExerciseInfo
 from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
-from trainings.forms import ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm
-
+from trainings.forms import ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm, AddExerciseToPlanForm
 
 class LoginView(FormView):
     template_name = 'dashboard/login.html'
@@ -133,7 +132,7 @@ class TrainingPlanDetailView(DetailView):
         training_plan = self.get_object()
 
         context['last_training'] = training_plan.last_training
-        context['exercises'] = training_plan.exercises_info
+        context['exercises_info'] = training_plan.exercises_info.all()
         return context
 
 
@@ -201,6 +200,32 @@ class ExercisesView(ListView):
 class ExerciseDetailView(DetailView):
     model = Exercise
     template_name = 'dashboard/exercise_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = AddExerciseToPlanForm()  # Dodaj formularz do kontekstu
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = AddExerciseToPlanForm(request.POST)
+
+        if form.is_valid():
+            training_plan = form.cleaned_data['training_plan']
+            series = form.cleaned_data['series']
+            reps = form.cleaned_data['reps']
+
+            exercise_info = TrainingPlanExerciseInfo.objects.create(
+                exercise=self.object,
+                series=series,
+                reps=reps
+            )
+
+            training_plan.exercises_info.add(exercise_info)
+
+            return redirect(reverse_lazy('training_plan_detail', args=[training_plan.id]))
+
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class ExerciseEditView(UpdateView):

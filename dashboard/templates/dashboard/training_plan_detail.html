@@ -9,7 +9,21 @@
                 <strong>Last Training:</strong> {{ last_training|default:"-" }}
             </li>
             <li>
-                <strong>Exercises:</strong> {{ exercises_info|default:"-" }}
+                <strong>Exercises:</strong>
+                {% if exercises_info %}
+                    <ul>
+                        {% for exercise_info in exercises_info %}
+                            <li>
+                                <a href="{% url 'exercise_detail' exercise_info.exercise.pk %}">
+                                    {{ exercise_info.exercise.name }}
+                                </a>
+                                - Series: {{ exercise_info.series }}, Reps: {{ exercise_info.reps }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No exercises added to this training plan yet.</p>
+                {% endif %}
             </li>
         </ul>
                         <label>

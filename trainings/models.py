@@ -11,25 +11,30 @@ class BodyPart(models.Model):
 
 class Exercise(models.Model):
     name = models.CharField(max_length=100, help_text='name of exercise')
-    body_part = models.ManyToManyField(BodyPart, help_text='body part for exercise')
+    body_part = models.ManyToManyField('BodyPart', help_text='body part for exercise')
     public = models.BooleanField(default=False, help_text='defines if exercise is visible for other users')
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, default=None,
                              related_name='exercises', help_text='exercise owner')
 
+    def __str__(self):
+        return self.name
+
 class TrainingPlanExerciseInfo(models.Model):
-    exercise = models.ForeignKey(Exercise,null=True, on_delete=models.CASCADE, related_name='exercise_id')
-    series = models.PositiveIntegerField(help_text="series number", validators=[MaxValueValidator(100),
-                                                                                MinValueValidator(1)])
+    exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE, related_name='exercise_info')
+    series = models.PositiveIntegerField(help_text="series number", validators=[MaxValueValidator(100), MinValueValidator(1)])
     reps = models.PositiveIntegerField(help_text="reps amount", validators=[MinValueValidator(1)])
+
+    def __str__(self):
+        return f'{self.exercise.name} - {self.series} series x {self.reps} reps'
 
 class UserTrainingPlans(models.Model): # TrainingPlan
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_training_plans', help_text='training plan owner')
     name = models.CharField(max_length=100, help_text='training plan name')
     last_training = models.DateTimeField(blank=True, null=True, help_text='date of last training')
-    exercises_info = models.ManyToManyField(TrainingPlanExerciseInfo, blank=True) # [exercise: 1, resp:5, series: 5]
+    exercises_info = models.ManyToManyField(TrainingPlanExerciseInfo, blank=True, related_name='training_plans') # [exercise: 1, reps: 5, series: 5]
 
-    def __str__(self) -> str:
-        return f'{self.pk}. {self.user.username} - {self.name}'
+    def __str__(self):
+        return self.name
 
 
 class Training(models.Model):

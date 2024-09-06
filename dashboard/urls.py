@@ -1,6 +1,4 @@
-from django.contrib import admin
-from django.template.defaulttags import url
-from django.urls import path, include, re_path
+from django.urls import path
 from django.views.generic.base import RedirectView
 from . import views
 from django.contrib.auth.views import LogoutView
@@ -20,7 +18,6 @@ urlpatterns = [
     path('create_training_plan/', views.CreateTrainingPlans.as_view(), name='create_training_plan'),
     path('training_plan/<int:pk>', views.TrainingPlanDetailView.as_view(), name='training_plan_detail'),
     path('training_plan/edit/<int:pk>', views.TrainingPlanEditView.as_view(), name='training_plan_edit'),
-
 
     path('history/', views.history_view, name='history'),
 
