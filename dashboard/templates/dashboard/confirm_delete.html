@@ -1,0 +1,14 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <h2>Are you sure you want to delete this exercise?</h2>
+        <p>{{ exercise.exercise.name }} - Series: {{ exercise.series }}, Reps: {{ exercise.reps }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="button fit">Yes, Delete</button>
+            <a href="{% url 'training_plan_detail' exercise.usertrainingplans_set.first.pk %}" class="button fit">No, Cancel</a>
+        </form>
+    </div>
+{% endblock %}

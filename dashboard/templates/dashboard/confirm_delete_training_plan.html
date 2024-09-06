@@ -1,0 +1,13 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+    <div class="inner">
+        <h2>Are you sure you want to delete the training plan "{{ training_plan.name }}"?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="button fit">Yes, Delete</button>
+            <a href="{% url 'training_plan_detail' training_plan.pk %}" class="button fit">No, Cancel</a>
+        </form>
+    </div>
+{% endblock %}

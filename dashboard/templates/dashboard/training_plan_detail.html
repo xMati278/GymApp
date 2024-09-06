@@ -6,18 +6,19 @@
         <h2>{{ training_plan.name }}</h2>
         <ul>
             <li>
-                <strong>Last Training:</strong> {{ last_training|default:"-" }}
+                <strong>Last Training:</strong> {{ training_plan.last_training|default:"-" }}
             </li>
             <li>
                 <strong>Exercises:</strong>
-                {% if exercises_info %}
+                {% if training_plan.exercises_info.all %}
                     <ul>
-                        {% for exercise_info in exercises_info %}
+                        {% for exercise_info in training_plan.exercises_info.all %}
                             <li>
-                                <a href="{% url 'exercise_detail' exercise_info.exercise.pk %}">
-                                    {{ exercise_info.exercise.name }}
-                                </a>
-                                - Series: {{ exercise_info.series }}, Reps: {{ exercise_info.reps }}
+                                {{ exercise_info.exercise.name }} - Series: {{ exercise_info.series }}, Reps: {{ exercise_info.reps }}
+                                <form method="POST" action="{% url 'delete_exercise_from_plan' exercise_info.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button small">Remove</button>
+                                </form>
                             </li>
                         {% endfor %}
                     </ul>
@@ -26,11 +27,15 @@
                 {% endif %}
             </li>
         </ul>
-                        <label>
+        <label>
             <a href="{% url 'training_plan_edit' training_plan.pk %}" class='button fit'> Edit </a>
         </label>
         <label>
             <a href="{% url 'training_plans' %}" class='button fit'> Back </a>
         </label>
+        <form method="POST" action="{% url 'delete_training_plan' training_plan.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="button fit">Delete Training Plan</button>
+        </form>
     </div>
 {% endblock %}

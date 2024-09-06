@@ -146,6 +146,13 @@ class TrainingPlanEditView(UpdateView):
         return reverse_lazy('training_plan_detail', kwargs={'pk': self.object.pk})
 
 
+class DeleteTrainingPlanView(DeleteView):
+    model = UserTrainingPlans
+    template_name = 'dashboard/confirm_delete_training_plan.html'
+    context_object_name = 'training_plan'
+    success_url = reverse_lazy('training_plans')
+
+
 def history_view(request): #TODO do zrobienia
     return render(request, 'dashboard/history.html')
 
@@ -276,6 +283,15 @@ class DeleteExerciseView(DeleteView):
         if obj.user != self.request.user:
             raise PermissionError("Yoy do not have permission to delete this exercise.")
         return obj
+
+
+class DeleteExerciseFromPlanView(DeleteView):
+    model = TrainingPlanExerciseInfo
+    template_name = 'dashboard/confirm_delete.html'
+
+    def get_success_url(self):
+        training_plan = self.object.training_plans.first()
+        return reverse_lazy('training_plan_detail', kwargs={'pk': training_plan.pk})
 
 
 def records_view(request): #TODO do zrobienia
