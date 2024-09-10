@@ -3,85 +3,89 @@
 {% block title %}GymApp - Exercises{% endblock %}
 
 {% block content %}
-    <div class="inner">
-        <h1>Exercises</h1>
+<div class="inner">
+    <h1>Exercises</h1>
 
-        <form method="GET" action="">
-            <label>
-                <input type="text" name="search" placeholder="Search for exercises..." value="{{ search }}">
-            </label>
-            <label>
-                <select name="sort_by">
-                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>All</option>
-                    <option value="public" {% if sort_by == 'public' %}selected{% endif %}>Public Exercises</option>
-                    <option value="private" {% if sort_by == 'private' %}selected{% endif %}>Your Exercises</option>
-                </select>
-            </label>
-            <label>
-                <select name="body_part">
-                    <option value="" {% if not selected_body_part %}selected{% endif %}>Body Part</option>
-                    {% for part in body_parts %}
-                        <option value="{{ part.id }}"
-                                {% if part.id|stringformat:"s" == selected_body_part %}selected{% endif %}>
-                            {{ part.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </label>
-            <button type="submit">Search</button>
-            <a href="{% url 'create_exercise' %}" class="button">Add Exercise</a>
-        </form>
-
-        {% if page_obj %}
-            <ul>
-                {% for exercise in page_obj %}
-                    <h4>
-                        <a href="{% url 'exercise_detail' exercise.pk %}">
-                            {{ exercise.name }}
-                            {% if not exercise.public %}
-                                (Your)
-                            {% endif %}
-                        </a>
-                    </h4>
+    <form method="GET" action="">
+        <label>
+            <input type="text" name="search" placeholder="Search for exercises..." value="{{ search }}">
+        </label>
+        <label>
+            <select name="sort_by">
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>All</option>
+                <option value="public" {% if sort_by == 'public' %}selected{% endif %}>Public Exercises</option>
+                <option value="private" {% if sort_by == 'private' %}selected{% endif %}>Your Exercises</option>
+            </select>
+        </label>
+        <label>
+            <select name="body_part">
+                <option value="" {% if not selected_body_part %}selected{% endif %}>Body Part</option>
+                {% for part in body_parts %}
+                    <option value="{{ part.id }}"
+                            {% if part.id|stringformat:"s" == selected_body_part %}selected{% endif %}>
+                        {{ part.name }}
+                    </option>
                 {% endfor %}
-            </ul>
-        {% endif %}
+            </select>
+        </label>
+        <button type="submit">Search</button>
+        <a href="{% url 'create_exercise' %}" class="button">Add Exercise</a>
+    </form>
 
-        <ul class="pagination">
-            {% if page_obj.paginator.num_pages > 1 %}
-                {% if page_obj.has_previous %}
-                    <li><a href="?page={{ page_obj.previous_page_number }}" class="button small">Prev</a></li>
+    {% if page_obj %}
+        <ul>
+        {% for exercise in page_obj %}
+        <h4>
+        {% if training_plan %}
+            <a href="{% url 'exercise_detail' exercise.pk %}?training_plan={{ training_plan }}">
+        {% else %}
+            <a href="{% url 'exercise_detail' exercise.pk %}">
+    {% endif %}
+    {{ exercise.name }}
+    {% if not exercise.public %}
+        (Your)
+    {% endif %}
+    </a>
+    </h4>
+    {% endfor %}
+    </ul>
+    {% endif %}
 
-                    {% if page_obj.number > 3 %}
-                        <li><a href="?page=1" class="page">1</a></li>
-                        {% if page_obj.number > 4 %}
-                            <li><span>...</span></li>
-                        {% endif %}
-                    {% endif %}
-                {% endif %}
+    <ul class="pagination">
+        {% if page_obj.paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}" class="button small">Prev</a></li>
 
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                        <li><a href="?page={{ num }}" class='page'>{{ num }}</a></li>
-                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <li><a href="?page={{ num }}" class="page">{{ num }}</a></li>
-                    {% endif %}
-                {% endfor %}
-
-                {% if page_obj.has_next %}
-                    {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                {% if page_obj.number > 3 %}
+                    <li><a href="?page=1" class="page">1</a></li>
+                    {% if page_obj.number > 4 %}
                         <li><span>...</span></li>
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}"
-                               class="page">{{ page_obj.paginator.num_pages }}</a></li>
-                    {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}"
-                               class="page">{{ page_obj.paginator.num_pages }}</a></li>
                     {% endif %}
-
-                    <li><a href="?page={{ page_obj.next_page_number }}" class="button small">Next</a></li>
                 {% endif %}
             {% endif %}
-        </ul>
-    </div>
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li><a href="?page={{ num }}" class='page'>{{ num }}</a></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li><a href="?page={{ num }}" class="page">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                    <li><span>...</span></li>
+                    <li><a href="?page={{ page_obj.paginator.num_pages }}"
+                           class="page">{{ page_obj.paginator.num_pages }}</a></li>
+                {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                    <li><a href="?page={{ page_obj.paginator.num_pages }}"
+                           class="page">{{ page_obj.paginator.num_pages }}</a></li>
+                {% endif %}
+
+                <li><a href="?page={{ page_obj.next_page_number }}" class="button small">Next</a></li>
+            {% endif %}
+        {% endif %}
+    </ul>
+</div>
 
 {% endblock %}

@@ -39,7 +39,7 @@
         {% endif %}
             
             <label>
-                <a href="{% url 'exercises' %}" class="button fit">Add Exercise</a>
+                <a href="{% url 'exercises' %}?training_plan={{ training_plan.pk }}" class="button fit">Add Exercise</a>
             </label>
 
             <label>

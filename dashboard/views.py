@@ -201,6 +201,8 @@ class ExercisesView(ListView):
         context['selected_body_part'] = body_part_filter
         context['body_parts'] = BodyPart.objects.all()
 
+        context['training_plan'] = self.request.GET.get('training_plan', None)
+
         return context
 
 
@@ -210,15 +212,17 @@ class ExerciseDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = AddExerciseToPlanForm()  # Dodaj formularz do kontekstu
+        context['form'] = AddExerciseToPlanForm()
+        context['training_plan'] = self.request.GET.get('training_plan', None)
+
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = AddExerciseToPlanForm(request.POST)
+        training_plan_id = int(self.request.GET.get('training_plan', None))
 
         if form.is_valid():
-            training_plan = form.cleaned_data['training_plan']
             series = form.cleaned_data['series']
             reps = form.cleaned_data['reps']
 
@@ -228,9 +232,15 @@ class ExerciseDetailView(DetailView):
                 reps=reps
             )
 
-            training_plan.exercises_info.add(exercise_info)
+            if training_plan_id:
+                try:
+                    training_plan = UserTrainingPlans.objects.get(id=training_plan_id)
+                    training_plan.exercises_info.add(exercise_info)
 
-            return redirect(reverse_lazy('training_plan_detail', args=[training_plan.id]))
+                    return redirect(reverse_lazy('training_plan_detail', args=[training_plan.id]))
+
+                except TrainingPlan.DoesNotExist:
+                    form.add_error(None, "The training plan provided does not exist.")
 
         return self.render_to_response(self.get_context_data(form=form))
 

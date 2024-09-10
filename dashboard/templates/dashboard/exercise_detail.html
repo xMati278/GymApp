@@ -17,11 +17,13 @@
                 You
             {% endif %}
         </p>
+        {% if training_plan %}
             <form method="post" action="">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class='button fit'>Add to Plan</button>
-        </form>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class='button fit'>Add to Plan</button>
+            </form>
+        {% endif %}
         <label>
             <a href="{% url 'exercises' %}" class='button fit'> Back </a>
         </label>
