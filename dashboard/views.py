@@ -11,6 +11,8 @@ from trainings.models import Exercise, BodyPart, UserTrainingPlans, TrainingPlan
 from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
 from trainings.forms import ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm, AddExerciseToPlanForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class LoginView(FormView):
     template_name = 'dashboard/login.html'
@@ -112,7 +114,7 @@ class CreateTrainingPlans(CreateView):
         return response
 
 
-class ReadTrainingPlans(ListView):
+class ReadTrainingPlans(LoginRequiredMixin, ListView):
     template_name = 'dashboard/training_plans.html'
     paginate_by = 10
     model = UserTrainingPlans
