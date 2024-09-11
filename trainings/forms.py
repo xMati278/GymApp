@@ -154,6 +154,5 @@ class UpdateTrainingPlanForm(forms.ModelForm):
 
 
 class AddExerciseToPlanForm(forms.Form):
-    #training_plan = forms.ModelChoiceField(queryset=UserTrainingPlans.objects.all(), label="Choose a Training Plan")
     series = forms.IntegerField(min_value=1, label="Series")
     reps = forms.IntegerField(min_value=1, label="Reps")
