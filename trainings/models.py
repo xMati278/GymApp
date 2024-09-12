@@ -23,6 +23,7 @@ class TrainingPlanExerciseInfo(models.Model):
     exercise = models.ForeignKey(Exercise, null=True, on_delete=models.CASCADE, related_name='exercise_info')
     series = models.PositiveIntegerField(help_text="series number", validators=[MaxValueValidator(100), MinValueValidator(1)])
     reps = models.PositiveIntegerField(help_text="reps amount", validators=[MinValueValidator(1)])
+    ordering = models.PositiveIntegerField(default=0, help_text='order of the exercise in the training plan')
 
     def __str__(self):
         return f'{self.exercise.name} - {self.series} series x {self.reps} reps'
@@ -78,7 +79,7 @@ class TrainingExercise(models.Model):
     weight = models.FloatField(help_text="weight amount", validators=[MinValueValidator(1)])
 
     def __str__(self) -> str:
-        return f'{self.training.user}, training: {self.training.id}, series: {self.series}, reps: {self.reps},' \
+        return f'{self.pk}.{self.training.user}, training: {self.training.id}, series: {self.series}, reps: {self.reps},' \
                f' weight: {self.weight}'
 
 

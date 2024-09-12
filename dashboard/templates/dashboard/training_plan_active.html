@@ -1,0 +1,62 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Active Training Plan{% endblock %}
+
+{% block content %}
+    <h2>Active Training Plan: {{ training_plan.name }}</h2>
+
+    <ul>
+        {% for exercise_info in exercises_info %}
+            <li id="exercise-{{ exercise_info.id }}">
+                {{ exercise_info.exercise.name }} - {{ exercise_info.series }}x{{ exercise_info.reps }}
+                <ul class="actions">
+                    <li><input type="number" class="reps-input" placeholder="Reps" min="1"
+                               data-id="{{ exercise_info.id }}"></li>
+                    <li><input type="number" class="weight-input" placeholder="Weight (in KG)" min="1"
+                               data-id="{{ exercise_info.id }}"></li>
+                    <button class="add-button" data-id="{{ exercise_info.id }}"><strong>+</strong></button>
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.add-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const exerciseId = this.getAttribute('data-id');
+                    const repsInput = document.querySelector(`.reps-input[data-id="${exerciseId}"]`).value;
+                    const weightInput = document.querySelector(`.weight-input[data-id="${exerciseId}"]`).value;
+
+                    if (repsInput && weightInput) {
+                        fetch('{% url "add_training_exercise" %}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({
+                                exercise_id: exerciseId,
+                                reps: repsInput,
+                                weight: weightInput,
+                                training_id: {{ current_training.id }}
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data)
+                                if (data.success) {
+                                    alert('Record added successfully!');
+                                    location.reload();
+                                } else {
+                                    alert('Failed to add record.');
+                                }
+                            });
+                    } else {
+                        alert('Please fill in all fields.');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

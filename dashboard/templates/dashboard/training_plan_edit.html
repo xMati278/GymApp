@@ -3,58 +3,66 @@
 {% block title %}GymApp - Edit {{ training_plan.name }}{% endblock %}
 
 {% block content %}
-    <div class="inner">
-        <h1>Edit Training Plan</h1>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
+<div class="inner">
+    <h1>Edit Training Plan</h1>
+    <form method="POST" action="{% url 'training_plan_edit' training_plan.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-                    {% if training_plan.exercises_info.all %}
-            <h2>Exercises</h2>
-            <table>
-                <thead>
+        {% if exercises_info %}
+        <h2>Exercises</h2>
+        <table>
+            <thead>
                 <tr>
+                    <th>Order</th>
                     <th>Exercise</th>
                     <th>Sets</th>
                     <th>Repetitions</th>
                     <th>Actions</th>
                 </tr>
-                </thead>
-                <tbody>
-                {% for exercise_info in training_plan.exercises_info.all %}
-                    <tr>
-                        <td>{{ exercise_info.exercise.name }}</td>
-                        <td>{{ exercise_info.series }}</td>
-                        <td>{{ exercise_info.reps }}</td>
-                        <td>
-                            <form method="POST" action="{% url 'delete_exercise_from_plan' exercise_info.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="button small">Remove</button>
-                            </form>
-                        </td>
-                    </tr>
+            </thead>
+            <tbody>
+                {% for exercise_info in exercises_info %}
+                <tr>
+                    <td>
+                        <input type="number" name="order-{{ exercise_info.id }}" value="{{ exercise_info.ordering }}" min="1" class="order-input">
+                    </td>
+                    <td>{{ exercise_info.exercise.name }}</td>
+                    <td>{{ exercise_info.series }}</td>
+                    <td>{{ exercise_info.reps }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_exercise_from_plan' exercise_info.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button small">Remove</button>
+                        </form>
+                    </td>
+                </tr>
                 {% endfor %}
-                </tbody>
-            </table>
+            </tbody>
+        </table>
         {% endif %}
-            
-            <label>
-                <a href="{% url 'exercises' %}?training_plan={{ training_plan.pk }}" class="button fit">Add Exercise</a>
-            </label>
+        
+        <button type="submit" class="button fit">Save Changes</button>
+    </form>
 
-            <label>
-                <button type="submit" class="button fit">Save Changes</button>
-            </label>
+    <form method="POST" action="{% url 'delete_training_plan' training_plan.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="button fit">Delete Training Plan</button>
+    </form>
 
-            <form method="POST" action="{% url 'delete_training_plan' training_plan.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="button fit">Delete Training Plan</button>
-            </form>
+    <label>
+        <a href="{% url 'training_plan_detail' training_plan.pk %}" class='button fit'>Cancel</a>
+    </label>
 
-        </form>
-        <label>
-            <a href="{% url 'training_plan_detail' training_plan.pk %}" class='button fit'>Cancel</a>
-        </label>
-    
-    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const orderInputs = document.querySelectorAll('.order-input');
+        orderInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                // Optional: Add logic here to validate or handle ordering changes
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -1,8 +1,6 @@
 from django import forms
 from .models import Exercise, UserTrainingPlans, BodyPart
 
-
-
 class CalculatorForm(forms.Form):
     female = forms.ChoiceField(
         choices=[(False, 'Male'), (True, 'Female')],

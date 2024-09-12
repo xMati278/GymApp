@@ -7,12 +7,16 @@ from trainings.calculators import Calculators
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView, DeleteView
-from trainings.models import Exercise, BodyPart, UserTrainingPlans, TrainingPlanExerciseInfo
+from trainings.models import Exercise, BodyPart, UserTrainingPlans, TrainingPlanExerciseInfo, TrainingExercise, Training
 from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
-from trainings.forms import ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm, AddExerciseToPlanForm
+from trainings.forms import (ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm,
+                             AddExerciseToPlanForm)
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 class LoginView(FormView):
     template_name = 'dashboard/login.html'
@@ -134,7 +138,7 @@ class TrainingPlanDetailView(DetailView):
         training_plan = self.get_object()
 
         context['last_training'] = training_plan.last_training
-        context['exercises_info'] = training_plan.exercises_info.all()
+        context['exercises_info'] = training_plan.exercises_info.all().order_by('ordering')
         return context
 
 
@@ -147,6 +151,21 @@ class TrainingPlanEditView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('training_plan_detail', kwargs={'pk': self.object.pk})
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['exercises_info'] = self.object.exercises_info.all().order_by('ordering')
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        training_plan = self.object
+
+        for exercise_info in training_plan.exercises_info.all():
+            new_ordering = request.POST.get(f'order-{exercise_info.id}', exercise_info.ordering)
+            exercise_info.ordering = int(new_ordering)
+            exercise_info.save()
+
+        return redirect(self.get_success_url())
 
 class DeleteTrainingPlanView(DeleteView):
     model = UserTrainingPlans
@@ -154,6 +173,49 @@ class DeleteTrainingPlanView(DeleteView):
     context_object_name = 'training_plan'
     success_url = reverse_lazy('training_plans')
 
+
+class ActiveTrainingPlanView(DetailView):
+    model = UserTrainingPlans
+    template_name = 'dashboard/training_plan_active.html'
+    context_object_name = 'training_plan'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        training_plan = self.get_object()
+        # Assume you have a way to get the current Training instance
+        current_training = get_object_or_404(Training, id=1)  # Adjust to get the correct Training instance
+
+        context['last_training'] = training_plan.last_training
+        context['exercises_info'] = training_plan.exercises_info.all()
+        context['current_training'] = current_training
+        return context
+
+
+@csrf_exempt
+@require_POST
+def add_training_exercise(request):
+    import json
+    data = json.loads(request.body)
+    exercise_id = data.get('exercise_id')
+    reps = data.get('reps')
+    weight = data.get('weight')
+    training_id = data.get('training_id')
+
+    try:
+        exercise = get_object_or_404(Exercise, id=exercise_id)
+        training = get_object_or_404(Training, id=training_id)  # Use the correct Training instance
+
+        TrainingExercise.objects.create(
+            training=training,
+            exercise=exercise,
+            series=1,  # Adjust or set default as needed
+            reps=reps,
+            weight=weight
+        )
+
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 def history_view(request): #TODO do zrobienia
     return render(request, 'dashboard/history.html')
@@ -237,11 +299,14 @@ class ExerciseDetailView(DetailView):
             if training_plan_id:
                 try:
                     training_plan = UserTrainingPlans.objects.get(id=training_plan_id)
+                    max_order = training_plan.exercises_info.aggregate(models.Max('ordering'))['ordering__max'] or 0
+                    exercise_info.ordering = max_order + 1
+                    exercise_info.save()
                     training_plan.exercises_info.add(exercise_info)
 
                     return redirect(reverse_lazy('training_plan_detail', args=[training_plan.id]))
 
-                except TrainingPlan.DoesNotExist:
+                except UserTrainingPlans.DoesNotExist:
                     form.add_error(None, "The training plan provided does not exist.")
 
         return self.render_to_response(self.get_context_data(form=form))
