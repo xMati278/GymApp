@@ -1,0 +1,37 @@
+{% if exercises_info %}
+<h2>Exercises</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Order</th>
+            <th>Exercise</th>
+            <th>Sets</th>
+            <th>Repetitions</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for exercise_info in exercises_info %}
+        <tr>
+            <td>
+                <input type="number" name="order-{{ exercise_info.id }}" value="{{ exercise_info.ordering }}" min="1"
+                    class="order-input"
+                    hx-post="{% url 'training_plan_edit' training_plan.pk %}" 
+                    hx-trigger="change" 
+                    hx-target="#exercises-list"
+                    hx-swap="innerHTML">
+            </td>
+            <td>{{ exercise_info.exercise.name }}</td>
+            <td>{{ exercise_info.series }}</td>
+            <td>{{ exercise_info.reps }}</td>
+            <td>
+                <button hx-delete="{% url 'delete_exercise_from_plan' exercise_info.pk %}" 
+                        hx-target="#exercises-list"
+                        hx-swap="innerHTML" 
+                        class="button small">Remove</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

@@ -165,6 +165,11 @@ class TrainingPlanEditView(UpdateView):
             exercise_info.ordering = int(new_ordering)
             exercise_info.save()
 
+        if request.headers.get('HX-Request'):
+            # Jeśli żądanie HTMX, renderujemy tylko fragment HTML z ćwiczeniami
+            context = self.get_context_data()
+            return render(request, 'dashboard/partials/training_plan_exercises_list.html', context)
+
         return redirect(self.get_success_url())
 
 class DeleteTrainingPlanView(DeleteView):
