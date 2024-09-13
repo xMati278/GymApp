@@ -162,15 +162,20 @@ class TrainingPlanEditView(UpdateView):
 
         for exercise_info in training_plan.exercises_info.all():
             new_ordering = request.POST.get(f'order-{exercise_info.id}', exercise_info.ordering)
+            new_series = request.POST.get(f'series-{exercise_info.id}', exercise_info.series)
+            new_reps = request.POST.get(f'reps-{exercise_info.id}', exercise_info.reps)
+
             exercise_info.ordering = int(new_ordering)
+            exercise_info.series = int(new_series)
+            exercise_info.reps = int(new_reps)
             exercise_info.save()
 
         if request.headers.get('HX-Request'):
-            # Jeśli żądanie HTMX, renderujemy tylko fragment HTML z ćwiczeniami
             context = self.get_context_data()
             return render(request, 'dashboard/partials/training_plan_exercises_list.html', context)
 
         return redirect(self.get_success_url())
+
 
 class DeleteTrainingPlanView(DeleteView):
     model = UserTrainingPlans

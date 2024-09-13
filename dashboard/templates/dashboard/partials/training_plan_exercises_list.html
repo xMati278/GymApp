@@ -22,8 +22,22 @@
                     hx-swap="innerHTML">
             </td>
             <td>{{ exercise_info.exercise.name }}</td>
-            <td>{{ exercise_info.series }}</td>
-            <td>{{ exercise_info.reps }}</td>
+            <td>
+                <input type="number" name="series-{{ exercise_info.id }}" value="{{ exercise_info.series }}" min="1"
+                    class="series-input"
+                    hx-post="{% url 'training_plan_edit' training_plan.pk %}" 
+                    hx-trigger="change" 
+                    hx-target="#exercises-list"
+                    hx-swap="innerHTML">
+            </td>
+            <td>
+                <input type="number" name="reps-{{ exercise_info.id }}" value="{{ exercise_info.reps }}" min="1"
+                    class="reps-input"
+                    hx-post="{% url 'training_plan_edit' training_plan.pk %}" 
+                    hx-trigger="change" 
+                    hx-target="#exercises-list"
+                    hx-swap="innerHTML">
+            </td>
             <td>
                 <button hx-delete="{% url 'delete_exercise_from_plan' exercise_info.pk %}" 
                         hx-target="#exercises-list"
