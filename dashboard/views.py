@@ -12,11 +12,13 @@ from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
 from trainings.forms import (ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm,
                              AddExerciseToPlanForm)
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from .mixins import TrainingPlanOwnerRequiredMixin
+import json
 
 class LoginView(FormView):
     template_name = 'dashboard/login.html'
@@ -128,7 +130,7 @@ class ReadTrainingPlans(LoginRequiredMixin, ListView):
         return UserTrainingPlans.objects.filter(user=user)
 
 
-class TrainingPlanDetailView(UserPassesTestMixin, DetailView):
+class TrainingPlanDetailView(TrainingPlanOwnerRequiredMixin, DetailView):
     model = UserTrainingPlans
     template_name = 'dashboard/training_plan_detail.html'
     context_object_name = 'training_plan'
@@ -141,15 +143,8 @@ class TrainingPlanDetailView(UserPassesTestMixin, DetailView):
         context['exercises_info'] = training_plan.exercises_info.all().order_by('ordering')
         return context
 
-    def test_func(self):
-        training_plan = self.get_object()
 
-        return self.request.user == training_plan.user
-
-    def handle_no_permission(self):
-        return redirect(reverse_lazy('training_plans'))
-
-class TrainingPlanEditView(UpdateView):
+class TrainingPlanEditView(TrainingPlanOwnerRequiredMixin, UpdateView):
     model = UserTrainingPlans
     form_class = UpdateTrainingPlanForm
     template_name = 'dashboard/training_plan_edit.html'
@@ -184,14 +179,14 @@ class TrainingPlanEditView(UpdateView):
         return redirect(self.get_success_url())
 
 
-class DeleteTrainingPlanView(DeleteView):
+class DeleteTrainingPlanView(TrainingPlanOwnerRequiredMixin, DeleteView):
     model = UserTrainingPlans
     template_name = 'dashboard/confirm_delete_training_plan.html'
     context_object_name = 'training_plan'
     success_url = reverse_lazy('training_plans')
 
 
-class ActiveTrainingPlanView(DetailView):
+class ActiveTrainingPlanView(TrainingPlanOwnerRequiredMixin, DetailView):
     model = UserTrainingPlans
     template_name = 'dashboard/training_plan_active.html'
     context_object_name = 'training_plan'
@@ -210,7 +205,6 @@ class ActiveTrainingPlanView(DetailView):
 @csrf_exempt
 @require_POST
 def add_training_exercise(request):
-    import json
     data = json.loads(request.body)
     exercise_id = data.get('exercise_id')
     reps = data.get('reps')
@@ -219,12 +213,12 @@ def add_training_exercise(request):
 
     try:
         exercise = get_object_or_404(Exercise, id=exercise_id)
-        training = get_object_or_404(Training, id=training_id)  # Use the correct Training instance
+        training = get_object_or_404(Training, id=training_id)
 
         TrainingExercise.objects.create(
             training=training,
             exercise=exercise,
-            series=1,  # Adjust or set default as needed
+            series=1,
             reps=reps,
             weight=weight
         )
