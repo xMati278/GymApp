@@ -3,27 +3,31 @@
 {% block title %}GymApp - Edit {{ training_plan.name }}{% endblock %}
 
 {% block content %}
-<div class="inner">
-    <h1>Edit Training Plan</h1>
-    <form method="POST" action="{% url 'training_plan_edit' training_plan.pk %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        
-        <div id="exercises-list" hx-get="{% url 'training_plan_edit' training_plan.pk %}" hx-trigger="load">
-            {% include 'dashboard/partials/training_plan_exercises_list.html' %}
-        </div>
-        
-        <button type="submit" class="button fit">Save Changes</button>
-    </form>
+    <div class="inner">
+        <h1>Edit Training Plan</h1>
+        <form method="POST" action="{% url 'training_plan_edit' training_plan.pk %}">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-    <form method="POST" action="{% url 'delete_training_plan' training_plan.pk %}">
-        {% csrf_token %}
-        <button type="submit" class="button fit">Delete Training Plan</button>
-    </form>
+            <div id="exercises-list" hx-get="{% url 'training_plan_edit' training_plan.pk %}" hx-trigger="load">
+                {% include 'dashboard/partials/training_plan_exercises_list.html' %}
+            </div>
 
-    <label>
-        <a href="{% url 'training_plan_detail' training_plan.pk %}" class='button fit'>Cancel</a>
-    </label>
+            <button type="submit" class="button fit">Save Changes</button>
+        </form>
 
-</div>
+        <label>
+            <a href="{% url 'exercises' %}?training_plan={{ training_plan.pk }}" class="button fit">Add Exercise</a>
+        </label>
+
+        <form method="POST" action="{% url 'delete_training_plan' training_plan.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="button fit">Delete Training Plan</button>
+        </form>
+
+        <label>
+            <a href="{% url 'training_plan_detail' training_plan.pk %}" class='button fit'>Cancel</a>
+        </label>
+
+    </div>
 {% endblock %}

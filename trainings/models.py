@@ -35,7 +35,7 @@ class UserTrainingPlans(models.Model): # TrainingPlan
     exercises_info = models.ManyToManyField(TrainingPlanExerciseInfo, blank=True, related_name='training_plans') # [exercise: 1, reps: 5, series: 5]
 
     def __str__(self):
-        return self.name
+        return f'{self.pk}, {self.name}'
 
 
 class Training(models.Model):
@@ -47,7 +47,7 @@ class Training(models.Model):
     note = models.TextField(null=True, blank=True, default=None, help_text='optional training note')
 
     def __str__(self) -> str:
-        return f'{self.user.username} - {self.training_plan.name} time: {self.training_duration}'
+        return f' {self.pk}. {self.user.username} - {self.training_plan.name} time: {self.training_duration}'
 
 
 class Category(models.Model):

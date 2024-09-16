@@ -5,8 +5,12 @@ from .models import BodyPart, Exercise, UserTrainingPlans, Training, Category, T
 admin.site.register(BodyPart)
 
 
+class AdminUserTrainingPlans(admin.ModelAdmin):
+    list_display = [
+        'pk', 'name'
+    ]
 
-admin.site.register(UserTrainingPlans)
+
 admin.site.register(Training)
 admin.site.register(TrainingRecord)
 admin.site.register(Category)
@@ -19,3 +23,4 @@ class AdminExercise(admin.ModelAdmin):
     ]
 
 admin.site.register(Exercise, AdminExercise)
+admin.site.register(UserTrainingPlans, AdminUserTrainingPlans)

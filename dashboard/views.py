@@ -12,7 +12,7 @@ from .const import CALCULATOR_KEY_TO_DISPLAY_MAP
 from django.http import Http404
 from trainings.forms import (ExerciseForm, CreateExerciseForm, CreateTrainingPlanForm, UpdateTrainingPlanForm,
                              AddExerciseToPlanForm)
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
@@ -128,7 +128,7 @@ class ReadTrainingPlans(LoginRequiredMixin, ListView):
         return UserTrainingPlans.objects.filter(user=user)
 
 
-class TrainingPlanDetailView(DetailView):
+class TrainingPlanDetailView(UserPassesTestMixin, DetailView):
     model = UserTrainingPlans
     template_name = 'dashboard/training_plan_detail.html'
     context_object_name = 'training_plan'
@@ -141,6 +141,13 @@ class TrainingPlanDetailView(DetailView):
         context['exercises_info'] = training_plan.exercises_info.all().order_by('ordering')
         return context
 
+    def test_func(self):
+        training_plan = self.get_object()
+
+        return self.request.user == training_plan.user
+
+    def handle_no_permission(self):
+        return redirect(reverse_lazy('training_plans'))
 
 class TrainingPlanEditView(UpdateView):
     model = UserTrainingPlans
@@ -192,8 +199,7 @@ class ActiveTrainingPlanView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         training_plan = self.get_object()
-        # Assume you have a way to get the current Training instance
-        current_training = get_object_or_404(Training, id=1)  # Adjust to get the correct Training instance
+        current_training = get_object_or_404(Training, id=2)
 
         context['last_training'] = training_plan.last_training
         context['exercises_info'] = training_plan.exercises_info.all()
