@@ -16,9 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('API.urls')),
-    path('', include('dashboard.urls')),
+    path('', include('dashboard.urls.auth')),
+    path('', include('dashboard.urls.calculator')),
+    path('', include('dashboard.urls.exercise')),
+    path('', include('dashboard.urls.history')),
+    path('', include('dashboard.urls.record')),
+    path('', include('dashboard.urls.training_plan')),
+
+    path('', RedirectView.as_view(pattern_name='training_plans', permanent=False), name='home'),
+
 ]
