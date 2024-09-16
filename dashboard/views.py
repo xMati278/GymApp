@@ -17,8 +17,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .mixins import TrainingPlanOwnerRequiredMixin
+from .mixins import TrainingPlanOwnerRequiredMixin, ExercisesOwnerRequiredMixin
 import json
+from django.db.models import Q
 
 class LoginView(FormView):
     template_name = 'dashboard/login.html'
@@ -247,6 +248,9 @@ class ExercisesView(ListView):
     def get_queryset(self):
         search_query, sort_by, body_part_filter = self.fetch_query_params()
         queryset = self.queryset
+        queryset = queryset.filter(
+            Q(public=True) | Q(public=False, user=self.request.user)
+        )
 
         if search_query:
             queryset = queryset.filter(name__icontains=search_query)
@@ -280,7 +284,7 @@ class ExercisesView(ListView):
         return context
 
 
-class ExerciseDetailView(DetailView):
+class ExerciseDetailView(ExercisesOwnerRequiredMixin, DetailView):
     model = Exercise
     template_name = 'dashboard/exercise_detail.html'
 
@@ -322,7 +326,7 @@ class ExerciseDetailView(DetailView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ExerciseEditView(UpdateView):
+class ExerciseEditView(ExercisesOwnerRequiredMixin, UpdateView):
     model = Exercise
     form_class = ExerciseForm
     template_name = 'dashboard/exercise_edit.html'
@@ -360,7 +364,7 @@ class CreateExerciseView(CreateView):
         return response
 
 
-class DeleteExerciseView(DeleteView):
+class DeleteExerciseView(ExercisesOwnerRequiredMixin, DeleteView):
     model = Exercise
     template_name = 'dashboard/exercise_delete.html'
     success_url = reverse_lazy('exercises')

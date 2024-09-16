@@ -11,3 +11,16 @@ class TrainingPlanOwnerRequiredMixin(UserPassesTestMixin):
 
     def handle_no_permission(self):
         return redirect(reverse_lazy('training_plans'))
+
+
+class ExercisesOwnerRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        exercise = self.get_object()
+
+        if exercise.user is None:
+            return True
+
+        return self.request.user == exercise.user
+
+    def handle_no_permission(self):
+        return redirect(reverse_lazy('exercises'))
