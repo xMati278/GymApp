@@ -63,11 +63,7 @@ class BodyPartSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
 class ExercisesSerializer(serializers.ModelSerializer):
-    # body_part = BodyPartSerializer(many=True)
-    # body_part = serializers.SerializerMethodField()
 
     class Meta:
         model = Exercise
@@ -81,9 +77,6 @@ class ExercisesSerializer(serializers.ModelSerializer):
 
         return representation
 
-    # @staticmethod
-    # def get_body_part(obj):
-    #     return [body_part.name for body_part in obj.body_part.all()]
 
 
 class UserTrainingPlansSerializer(serializers.ModelSerializer):
