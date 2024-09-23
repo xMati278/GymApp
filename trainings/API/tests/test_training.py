@@ -10,7 +10,7 @@ from datetime import datetime
 
 class TestTraining(TestCase):
     def setUp(self) -> None:
-        self.user = User.objects.create_user(username="tester", password='tester') # nosec B106
+        self.user = User.objects.create_user(username="tester", password='tester')
         self.token = RefreshToken.for_user(self.user)
         self.auth_header = {'AUTHORIZATION': f'Bearer {self.token.access_token}'}
 
