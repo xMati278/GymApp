@@ -67,8 +67,5 @@ jobs:
       continue-on-error: true
     - name: Run Ruff
       run: |
-        poetry run ruff API
-        poetry run ruff trainings
-        poetry run ruff GymApp
-    
+        poetry run ruff .
 
