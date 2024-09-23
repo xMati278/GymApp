@@ -5,7 +5,7 @@ from trainings.models import Exercise, BodyPart, UserTrainingPlans, TrainingPlan
 from django.http import Http404
 from trainings.forms import ExerciseForm, CreateExerciseForm, AddExerciseToPlanForm
 from dashboard.mixins import ExercisesOwnerRequiredMixin
-from django.db.models import Q
+from django.db.models import Q, Max
 
 
 
@@ -90,7 +90,7 @@ class ExerciseDetailView(ExercisesOwnerRequiredMixin, DetailView):
             if training_plan_id:
                 try:
                     training_plan = UserTrainingPlans.objects.get(id=training_plan_id)
-                    max_order = training_plan.exercises_info.aggregate(models.Max('ordering'))['ordering__max'] or 0
+                    max_order = training_plan.exercises_info.aggregate(Max('ordering'))['ordering__max'] or 0
                     exercise_info.ordering = max_order + 1
                     exercise_info.save()
                     training_plan.exercises_info.add(exercise_info)
