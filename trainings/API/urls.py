@@ -1,5 +1,5 @@
 from django.urls import path
-from trainings.API.views import (calculator, private_exercise, training_exercise, training_plan_exercise_info,
+from trainings.API.views import (calculator, exercise, training_exercise, training_plan_exercise_info,
                                  training_record, training, user_training_plan)
 
 urlpatterns = [
@@ -11,16 +11,9 @@ urlpatterns = [
     path('total/', calculator.CalculateTotal.as_view(), name='calculate-total'),
 
     #EXERCISE
-    path('body-parts/', private_exercise.GetAllBodyParts.as_view(), name='read-all-body-parts'),
-    path('createexercises/', private_exercise.CreatePrivateExercise.as_view(), name='create-exercise'),
-    # exercises definuje CI POST
-    path('exercises/public/', private_exercise.ReadPublicExercises.as_view(), name='read-public-exercises'),
-    path('exercises/private/', private_exercise.ReadPrivateExercises.as_view(), name='read-private-exercises'),
-    # path('exercises/private/', private_exercise.ListCreatePrivateExercisesAPIView.as_view(), ...) # exercises/private GET (list), POST (create), DELETE (method not allowd 405)
-    path('updateexercises/<int:pk>', private_exercise.UpdatePrivateExercise.as_view(), name='update-private-exercise'),
-    # exercises/<int:pk>/private
-    path('deleteexercises/<int:pk>', private_exercise.DeletePrivateExercise.as_view(), name='delete-exercise'),
-    # exercises/<int:pk>/private
+    path('body-parts/', exercise.GetAllBodyParts.as_view(), name='read-all-body-parts'),
+    path('exercises/', exercise.ListCreateExerciseApiVIew.as_view(), name='api-exercises'),
+    path('exercises/edit/<int:pk>', exercise.UpdateDestroyExerciseApiView.as_view(), name='api-edit-exercise'),
 
     #TRAINING EXERCISE
     path('createtrainingexercise/', training_exercise.CreateTrainingExercise.as_view(),
