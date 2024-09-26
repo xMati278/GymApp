@@ -139,6 +139,11 @@ class DeleteExerciseFromPlanView(DeleteView):
     model = TrainingPlanExerciseInfo
     template_name = 'dashboard/confirm_delete_training_plan_exercise.html'
 
+    def post(self, request, *args, **kwargs):
+        print('DeleteExerciseFromPlanView.post')
+        return super().post(request, *args, **kwargs)
+
     def get_success_url(self):
+        print('DeleteExerciseFromPlanView.get_success_url')
         training_plan = self.object.training_plans.first()
         return reverse_lazy('training_plan_detail', kwargs={'pk': training_plan.pk})

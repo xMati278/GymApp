@@ -11,6 +11,10 @@ class GetAllBodyParts(generics.ListAPIView):
     serializer_class = BodyPartSerializer
     queryset = BodyPart.objects.all()
 
+class ReadPublicExercises(generics.ListAPIView):
+    serializer_class = ExercisesSerializer
+    queryset = Exercise.objects.filter(public=True)
+
 
 class CreatePrivateExercise(generics.CreateAPIView):
     queryset = Exercise.objects.all()
@@ -31,11 +35,6 @@ class CreatePrivateExercise(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ReadPublicExercises(generics.ListAPIView):
-    serializer_class = ExercisesSerializer
-    queryset = Exercise.objects.filter(public=True)
-
-
 class ReadPrivateExercises(generics.ListAPIView):
     serializer_class = ExercisesSerializer
     permission_classes = [IsAuthenticated]
@@ -49,6 +48,29 @@ class ReadPrivateExercises(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+# class ListCreatePrivateExercisesAPIView(generics.ListCreateAPIView):
+#     serializer_class = ExercisesSerializer
+#     permission_classes = [IsAuthenticated]
+#     authentication_classes = [JWTAuthentication]
+#
+#     def get_queryset(self):
+#         user = self.request.user
+#         return Exercise.objects.filter(user=user)
+#
+#     def create(self, request, *args, **kwargs):
+#         mutable_data = request.data.copy()
+#         mutable_data['user'] = self.request.user.id
+#
+#         serializer = self.get_serializer(data=mutable_data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             headers = self.get_success_headers(serializer.data)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UpdatePrivateExercise(generics.UpdateAPIView):
