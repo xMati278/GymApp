@@ -1,4 +1,3 @@
-from django.conf.urls.i18n import urlpatterns
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
