@@ -35,7 +35,7 @@ class ReadTrainingPlans(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        return UserTrainingPlans.objects.filter(user=user)
+        return UserTrainingPlans.objects.filter(user=user).order_by('name')
 
 
 class TrainingPlanDetailView(TrainingPlanOwnerRequiredMixin, DetailView):

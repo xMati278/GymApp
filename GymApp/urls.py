@@ -20,22 +20,9 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api', include('accounts.API.urls')),
-    path('api', include('trainings.API.urls.calculator')),
-    path('api', include('trainings.API.urls.exercise')),
-    path('api', include('trainings.API.urls.user_training_plan')),
-    path('api', include('trainings.API.urls.trainings')),
-    path('api', include('trainings.API.urls.training_record')),
-    path('api', include('trainings.API.urls.training_exercise')),
-    path('api', include('trainings.API.urls.training_plan_exercise_info')),
-
-    path('', include('dashboard.urls.auth')),
-    path('', include('dashboard.urls.calculator')),
-    path('', include('dashboard.urls.exercise')),
-    path('', include('dashboard.urls.history')),
-    path('', include('dashboard.urls.record')),
-    path('', include('dashboard.urls.training_plan')),
-
     path('', RedirectView.as_view(pattern_name='training_plans', permanent=False), name='home'),
 
 ]
+
+urlpatterns += api_v1
+urlpatterns += web_app

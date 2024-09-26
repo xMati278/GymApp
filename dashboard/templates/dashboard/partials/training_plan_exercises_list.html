@@ -40,11 +40,15 @@
                            hx-swap="innerHTML">
                 </td>
                 <td>
-                    <button hx-delete="{% url 'delete_exercise_from_plan' exercise_info.pk %}"
-                            hx-target="#exercises-list"
-                            hx-swap="innerHTML"
-                            class="button small">Remove
-                    </button>
+{#                    <button hx-post="{% url 'delete_exercise_from_plan' exercise_info.id %}"#}
+{#                            hx-target="#exercises-list"#}
+{#                            hx-swap="innerHTML"#}
+{#                            class="button small">Remove#}
+{#                    </button>#}
+                    <form action="{% url 'delete_exercise_from_plan' exercise_info.id  %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="button small">Remove</button>
+                    </form>
                 </td>
             </tr>
         {% endfor %}
