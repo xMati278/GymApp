@@ -17,11 +17,6 @@ class ListCreateTrainingsApiView(ListCreateAPIView):
         user = self.request.user
         return Training.objects.filter(user=user)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def create(self, request, *args, **kwargs):
         mutable_data = request.data.copy()
         mutable_data['user'] = self.request.user.id
