@@ -11,14 +11,15 @@ urlpatterns = [
     path('total/', calculator.CalculateTotal.as_view(), name='calculate-total'),
 
     #EXERCISE
-    path('body-parts/', exercise.GetAllBodyParts.as_view(), name='read-all-body-parts'),
+    path('body-parts/', exercise.GetAllBodyParts.as_view(), name='api-read-all-body-parts'),
     path('exercises/', exercise.ListCreateExerciseApiVIew.as_view(), name='api-exercises'),
-    path('exercises/edit/<int:pk>', exercise.UpdateDestroyExerciseApiView.as_view(), name='api-edit-exercise'),
+    path('exercise/edit/<int:pk>', exercise.UpdateDestroyExerciseApiView.as_view(), name='api-edit-exercise'),
 
     #TRAINING EXERCISE
     path('createtrainingexercise/', training_exercise.CreateTrainingExercise.as_view(),
          name='create-training-exercise'),
     path('readtrainingexercise/', training_exercise.ReadTrainingExercise.as_view(), name='read-training-exercise'),
+
     path('updatetrainingexercise/<int:pk>', training_exercise.UpdateTrainingExercise.as_view(),
          name='update-training-exercise'),
     path('deletetrainingexercise/<int:pk>', training_exercise.DestroyTrainingExercise.as_view(),
@@ -45,10 +46,8 @@ urlpatterns = [
          name='delete-training-record'),
 
     #TRAININGS
-    path('createtraining/', training.CreateTraining.as_view(), name='create-training'),
-    path('readtrainings/', training.ReadTrainings.as_view(), name='read-trainings'),
-    path('updatetraining/<int:pk>', training.UpdateTraining.as_view(), name='update-training'),
-    path('deletetraining/<int:pk>', training.DestroyTraining.as_view(), name='delete-training'),
+    path('trainings/', training.ListCreateTrainingsApiView.as_view(), name='api-trainings'),
+    path('trainings/edit/<int:pk>', training.UpdateDestroyTrainingApiView.as_view(), name='api-trainings-edit'),
 
     #USER TRAINING PLAN
     path('createusertrainingplan/', user_training_plan.CreateUserTrainingPlan.as_view(),
