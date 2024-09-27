@@ -20,16 +20,10 @@ urlpatterns = [
     path('training_exercise/edit/<int:pk>', training_exercise.UpdateDestroyTrainingExerciseApiView.as_view(), name='api-edit-training-exercise'),
 
     #TRAINING PLAN EXERCISE INFO
-    path('createtrainingplanexerciseinfo/', training_plan_exercise_info.CreateTrainingPlanExerciseInfo.as_view(),
-         name='create-training-plan-exercise-info'),
-    path('readtrainingplanexerciseinfo/', training_plan_exercise_info.ReadTrainingPlanExerciseInfo.as_view(),
-         name='read-training-plan-exercise-info'),
-    path('updatetrainingplanexerciseinfo/<int:pk>',
-         training_plan_exercise_info.UpdateTrainingPlanExerciseInfo.as_view(),
-         name='update-training-plan-exercise-info'),
-    path('deletetrainingplanexerciseinfo/<int:pk>',
-         training_plan_exercise_info.DestroyTrainingPlanExerciseInfo.as_view(),
-         name='destroy-training-plan-exercise-info'),
+    path('training_plan_exercises_info/', training_plan_exercise_info.ListCreateTrainingPlanExerciseInfoApiView.as_view(),
+         name='api-training-plan-exercise-info'),
+    path('training_plan_exercise_info/edit/<int:pk>', training_plan_exercise_info.UpdateDestroyTrainingPlanExerciseInfoApiView.as_view(),
+         name='api-edit-training-plan-exercise-info'),
 
     #TRAINING RECORD
     path('createtrainingrecord/', training_record.CreateTrainingRecord.as_view(), name='create-training-record'),
