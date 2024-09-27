@@ -3,7 +3,6 @@ from trainings.API.serializers import TrainingExerciseSerializer
 from trainings.models import TrainingPlanExerciseInfo, TrainingExercise
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.viewsets import generics
 
 
 class ListCreateTrainingExercisesApiView(ListCreateAPIView):
