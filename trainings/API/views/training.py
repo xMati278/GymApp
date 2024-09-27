@@ -1,4 +1,3 @@
-from rest_framework.viewsets import generics
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import Response
 from trainings.API.serializers import TrainingSerializer
@@ -35,38 +34,6 @@ class ListCreateTrainingsApiView(ListCreateAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UpdateTraining(generics.UpdateAPIView):
-    queryset = Training.objects.all()
-    serializer_class = TrainingSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-    def get_object(self) -> Training:
-        user = self.request.user.id
-        training_id = self.kwargs.get('pk')
-
-        try:
-            training = Training.objects.get(pk=training_id, user=user)
-            return training
-        except Training.DoesNotExist:
-            self.permission_denied(self.request)
-
-
-class DestroyTraining(generics.DestroyAPIView):
-    queryset = Training.objects.all()
-    serializer_class = TrainingSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-    def get_object(self) -> Training:
-        user = self.request.user.id
-        training_id = self.kwargs.get('pk')
-
-        try:
-            training = Training.objects.get(pk=training_id, user=user)
-            return training
-        except Training.DoesNotExist:
-            self.permission_denied(self.request)
 
 class UpdateDestroyTrainingApiView(RetrieveUpdateDestroyAPIView):
     queryset = Training.objects.all()
