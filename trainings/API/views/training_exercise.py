@@ -1,18 +1,12 @@
-from rest_framework.viewsets import generics
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from trainings.API.serializers import TrainingExerciseSerializer
 from trainings.models import TrainingPlanExerciseInfo, TrainingExercise
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.viewsets import generics
 
 
-class CreateTrainingExercise(generics.CreateAPIView):
-    queryset = TrainingExercise.objects.all()
-    serializer_class = TrainingExerciseSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-
-class ReadTrainingExercise(generics.ListAPIView):
+class ListCreateTrainingExercisesApiView(ListCreateAPIView):
     queryset = TrainingExercise.objects.all()
     serializer_class = TrainingExerciseSerializer
     permission_classes = [IsAuthenticated]
@@ -25,13 +19,7 @@ class ReadTrainingExercise(generics.ListAPIView):
         return exercise_info
 
 
-class UpdateTrainingExercise(generics.UpdateAPIView):
-    queryset = TrainingExercise.objects.all()
-    serializer_class = TrainingExerciseSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-class DestroyTrainingExercise(generics.DestroyAPIView):
+class UpdateDestroyTrainingExerciseApiView(RetrieveUpdateDestroyAPIView):
     queryset = TrainingExercise.objects.all()
     serializer_class = TrainingExerciseSerializer
     permission_classes = [IsAuthenticated]
