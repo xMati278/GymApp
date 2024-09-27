@@ -69,41 +69,6 @@ class ListCreateUserTrainingPlanApiView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-# class UpdateUserTrainingPlan(generics.UpdateAPIView):
-#     queryset = UserTrainingPlans.objects.all()
-#     serializer_class = UserTrainingPlansSerializer
-#     permission_classes = [IsAuthenticated]
-#     authentication_classes = [JWTAuthentication]
-#
-#     def get_object(self) -> UserTrainingPlans:
-#         user = self.request.user.id
-#         plan_id = self.kwargs.get('pk')
-#
-#         try:
-#             training_plan = UserTrainingPlans.objects.get(pk=plan_id, user=user)
-#             return training_plan
-#
-#         except UserTrainingPlans.DoesNotExist:
-#             self.permission_denied(self.request)
-#
-#
-# class DeleteUserTrainingPlan(generics.DestroyAPIView):
-#     queryset = UserTrainingPlans.objects.all()
-#     serializer_class = UserTrainingPlansSerializer
-#     permission_classes = [IsAuthenticated]
-#     authentication_classes = [JWTAuthentication]
-#
-#     def get_object(self) -> UserTrainingPlans:
-#         user = self.request.user.id
-#         plan_id = self.kwargs.get('pk')
-#
-#         try:
-#             training_plan = UserTrainingPlans.objects.get(pk=plan_id, user=user)
-#             return training_plan
-#         except UserTrainingPlans.DoesNotExist:
-#             self.permission_denied(self.request)
-
 class UpdateDestroyUserTrainingPlanApiView(RetrieveUpdateDestroyAPIView):
     queryset = UserTrainingPlans.objects.all()
     serializer_class = UserTrainingPlansSerializer
