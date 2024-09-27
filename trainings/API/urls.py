@@ -13,25 +13,21 @@ urlpatterns = [
     #EXERCISE
     path('body-parts/', exercise.GetAllBodyParts.as_view(), name='api-read-all-body-parts'),
     path('exercises/', exercise.ListCreateExerciseApiVIew.as_view(), name='api-exercises'),
-    path('exercise/edit/<int:pk>', exercise.UpdateDestroyExerciseApiView.as_view(), name='api-edit-exercise'),
+    path('exercises/edit/<int:pk>', exercise.UpdateDestroyExerciseApiView.as_view(), name='api-edit-exercise'),
 
     #TRAINING EXERCISE
     path('training_exercises/', training_exercise.ListCreateTrainingExercisesApiView.as_view(), name='api-training-exercises'),
-    path('training_exercise/edit/<int:pk>', training_exercise.UpdateDestroyTrainingExerciseApiView.as_view(), name='api-edit-training-exercise'),
+    path('training_exercises/edit/<int:pk>', training_exercise.UpdateDestroyTrainingExerciseApiView.as_view(), name='api-edit-training-exercise'),
 
     #TRAINING PLAN EXERCISE INFO
     path('training_plan_exercises_info/', training_plan_exercise_info.ListCreateTrainingPlanExerciseInfoApiView.as_view(),
          name='api-training-plan-exercise-info'),
-    path('training_plan_exercise_info/edit/<int:pk>', training_plan_exercise_info.UpdateDestroyTrainingPlanExerciseInfoApiView.as_view(),
+    path('training_plan_exercises_info/edit/<int:pk>', training_plan_exercise_info.UpdateDestroyTrainingPlanExerciseInfoApiView.as_view(),
          name='api-edit-training-plan-exercise-info'),
 
     #TRAINING RECORD
-    path('createtrainingrecord/', training_record.CreateTrainingRecord.as_view(), name='create-training-record'),
-    path('readtrainingrecord/', training_record.ReadTrainingRecord.as_view(), name='read-training-record'),
-    path('updatetrainingrecord/<int:pk>', training_record.UpdateTrainingRecord.as_view(),
-         name='update-training-record'),
-    path('deletetrainingrecord/<int:pk>', training_record.DestroyTrainingRecord.as_view(),
-         name='delete-training-record'),
+    path('training_records/', training_record.ListCreateTrainingRecordsApiView.as_view(), name='api-training-records'),
+    path('training_records/edit/<int:pk>', training_record.UpdateDestroyTrainingRecordApiView.as_view(), name='api-edit-training-record'),
 
     #TRAININGS
     path('trainings/', training.ListCreateTrainingsApiView.as_view(), name='api-trainings'),
