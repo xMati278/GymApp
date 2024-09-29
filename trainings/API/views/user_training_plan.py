@@ -29,11 +29,6 @@ class ListCreateUserTrainingPlanApiView(ListCreateAPIView):
         user = self.request.user
         return UserTrainingPlans.objects.filter(user=user)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class UpdateDestroyUserTrainingPlanApiView(RetrieveUpdateDestroyAPIView):
     queryset = UserTrainingPlans.objects.all()
