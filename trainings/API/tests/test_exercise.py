@@ -24,7 +24,7 @@ class TestPrivateExerciseApi(TestCase):
 
     def test_CreatePrivateExercise_returns_201_when_provided_correct_params(self):
         data = {"name": "Bench Press", "body_part": [self.xyz.pk]}
-        response = self.client.post(reverse('api-exercises'), data=data, headers=self.auth_header)
+        response = self.client.post(reverse('api-exercises-list'), data=data, headers=self.auth_header)
 
         response_data = json.loads(response.content)
 
@@ -35,14 +35,14 @@ class TestPrivateExerciseApi(TestCase):
 
     def test_CreatePrivateExercise_returns_400_when_not_provided_required_params(self):
         data = {"body_part": [1]}
-        response = self.client.post(reverse('api-exercises'), data=data, headers=self.auth_header)
+        response = self.client.post(reverse('api-exercises-list'), data=data, headers=self.auth_header)
         response_data = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response_data['name'], ['This field is required.'])
 
     def test_ReadPublicExercise(self):
-        response = self.client.get(reverse('api-exercises'))
+        response = self.client.get(reverse('api-exercises-list'))
         response_data = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -50,16 +50,16 @@ class TestPrivateExerciseApi(TestCase):
 
     def test_CreatePrivateExercise_returns_401_when_authorization_token_not_provided(self):
         data = {"name": "Triceps Extension", "body_part": [1]}
-        response = self.client.post(reverse('api-exercises'), data=data)
+        response = self.client.post(reverse('api-exercises-list'), data=data)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     def test_ReadPrivateExercise(self):
-        response = self.client.get(reverse('api-exercises'), {'type': 'private'}, headers=self.auth_header)
+        response = self.client.get(reverse('api-exercises-list'), {'type': 'private'}, headers=self.auth_header)
         response_data = json.loads(response.content)
         self.assertEqual(self.user.pk, response_data[0]['user'])
     def test_UpdatePrivateExercise_returns_201_when_provided_correct_data(self):
         data = {'name': "Super Private Chest Press"}
-        response = self.client.patch(reverse('api-edit-exercise', kwargs={'pk': self.private_exercise.pk}), data=data,
+        response = self.client.patch(reverse('api-exercises-detail', kwargs={'pk': self.private_exercise.pk}), data=data,
                                      headers=self.auth_header, content_type='application/json')
         response_data = json.loads(response.content)
 
@@ -68,18 +68,18 @@ class TestPrivateExerciseApi(TestCase):
 
     def test_UpdatePrivateExercise_returns_401_when_authorization_token_not_provided(self):
         data = {'name': "Super Private Chest Press"}
-        response = self.client.patch(reverse('api-edit-exercise', kwargs={'pk': 2}), data=data,
+        response = self.client.patch(reverse('api-exercises-detail', kwargs={'pk': 2}), data=data,
                                      content_type='application/json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_DeletePrivateExercise_returns_401_when_authorization_token_not_provided(self):
-        response = self.client.delete(reverse('api-edit-exercise', kwargs={'pk': 2}),
+        response = self.client.delete(reverse('api-exercises-detail', kwargs={'pk': 2}),
                                       content_type='application/json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     def test_DeletePrivateExercise_returns_204_when_authorization_token_provided(self):
-        response = self.client.delete(reverse('api-edit-exercise', kwargs={'pk': self.private_exercise.pk}),
+        response = self.client.delete(reverse('api-exercises-detail', kwargs={'pk': self.private_exercise.pk}),
                                       content_type='application/json', headers=self.auth_header)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

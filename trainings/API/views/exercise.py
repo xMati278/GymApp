@@ -1,5 +1,6 @@
 from rest_framework.views import Response
 from rest_framework.generics import ListAPIView,ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 from trainings.API.serializers import ExercisesSerializer, BodyPartSerializer
 from trainings.models import Exercise, BodyPart
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -11,10 +12,10 @@ class GetAllBodyParts(ListAPIView):
     serializer_class = BodyPartSerializer
     queryset = BodyPart.objects.all()
 
-
-class ListCreateExerciseApiVIew(ListCreateAPIView):
+class ExerciseViewSet(ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExercisesSerializer
+    permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
@@ -27,6 +28,16 @@ class ListCreateExerciseApiVIew(ListCreateAPIView):
         else:
             return Exercise.objects.filter(public=True)
 
+    def get_object(self) -> Exercise:
+        user = self.request.user.id
+        exercise_id = self.kwargs.get('pk')
+
+        try:
+            exercise = Exercise.objects.get(pk=exercise_id, user=user)
+            return exercise
+
+        except Exercise.DoesNotExist:
+            self.permission_denied(self.request)
 
     def create(self, request, *args, **kwargs):
         mutable_data = request.data.copy()
@@ -49,21 +60,3 @@ class ListCreateExerciseApiVIew(ListCreateAPIView):
         else:
 
             return [AllowAny()]
-
-
-class UpdateDestroyExerciseApiView(RetrieveUpdateDestroyAPIView):
-    queryset = Exercise.objects.all()
-    serializer_class = ExercisesSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-    def get_object(self) -> Exercise:
-        user = self.request.user.id
-        exercise_id = self.kwargs.get('pk')
-
-        try:
-            exercise = Exercise.objects.get(pk=exercise_id, user=user)
-            return exercise
-
-        except Exercise.DoesNotExist:
-            self.permission_denied(self.request)
