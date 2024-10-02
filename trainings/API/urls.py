@@ -1,14 +1,14 @@
 from django.urls import path, include
-from trainings.API.views import (calculator, exercise, training_exercise, training_plan_exercise_info,
+from trainings.API.views import (training_plan_exercise_info,
                                  training_record,user_training_plan)
 from rest_framework.routers import DefaultRouter
+from trainings.API.views import calculator, exercise, training, training_exercise
 
-from trainings.API.views.exercise import ExerciseViewSet
-from trainings.API.views.training import TrainingViewSet
 
 router = DefaultRouter()
-router.register(r'exercises', ExerciseViewSet, basename='api-exercises')
-router.register(r'trainings', TrainingViewSet, basename='api-trainings')
+router.register(r'exercises', exercise.ExerciseViewSet, basename='api-exercises')
+router.register(r'trainings', training.TrainingViewSet, basename='api-trainings')
+router.register(r'training-exercises', training_exercise.TrainingExerciseViewSet, basename='api-training-exercises')
 
 
 urlpatterns = [
@@ -21,9 +21,6 @@ urlpatterns = [
 
     path('body-parts/', exercise.GetAllBodyParts.as_view(), name='api-read-all-body-parts'),
     path('', include(router.urls)),
-    #TRAINING EXERCISE
-    path('training-exercises/', training_exercise.ListCreateTrainingExercisesApiView.as_view(), name='api-training-exercises'),
-    path('training-exercises/<int:pk>', training_exercise.UpdateDestroyTrainingExerciseApiView.as_view(), name='api-edit-training-exercise'),
 
     #TRAINING PLAN EXERCISE INFO
     path('training-plan-exercises-info/', training_plan_exercise_info.ListCreateTrainingPlanExerciseInfoApiView.as_view(),
