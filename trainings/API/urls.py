@@ -1,8 +1,7 @@
 from django.urls import path, include
-from trainings.API.views import (user_training_plan)
 from rest_framework.routers import DefaultRouter
-from trainings.API.views import calculator, exercise, training, training_exercise, training_plan_exercise_info, training_record
-
+from trainings.API.views import (calculator, exercise, training, training_exercise, training_plan_exercise_info,
+                                 training_record, user_training_plan)
 
 router = DefaultRouter()
 router.register(r'exercises', exercise.ExerciseViewSet, basename='api-exercises')
@@ -11,6 +10,7 @@ router.register(r'training-exercises', training_exercise.TrainingExerciseViewSet
 router.register(r'training-plan-exercise-info', training_plan_exercise_info.TrainingPlanExerciseInfoViewSet,
                 basename='api-training-plan-exercise-info')
 router.register(r'training-records', training_record.TrainingRecordViewSet, basename='api-training-records')
+router.register(r'user-training-plan', user_training_plan.UserTrainingPlansViewSet, basename='api-user-training-plans')
 
 urlpatterns = [
     #CALCULATOR
@@ -22,8 +22,4 @@ urlpatterns = [
 
     path('body-parts/', exercise.GetAllBodyParts.as_view(), name='api-read-all-body-parts'),
     path('', include(router.urls)),
-
-    #USER TRAINING PLAN
-    path('user-training-plans/', user_training_plan.ListCreateUserTrainingPlanApiView.as_view(), name='api-user-training-plan'),
-    path('user-training-plans/<int:pk>', user_training_plan.UpdateDestroyUserTrainingPlanApiView.as_view(), name='api-edit-user-training-plan'),
 ]
