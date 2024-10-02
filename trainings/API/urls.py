@@ -1,6 +1,6 @@
 from django.urls import path, include
 from trainings.API.views import (calculator, exercise, training_exercise, training_plan_exercise_info,
-                                 training_record, training, user_training_plan)
+                                 training_record,user_training_plan)
 from rest_framework.routers import DefaultRouter
 
 from trainings.API.views.exercise import ExerciseViewSet
