@@ -4,9 +4,11 @@ from trainings.API.views import (calculator, exercise, training_exercise, traini
 from rest_framework.routers import DefaultRouter
 
 from trainings.API.views.exercise import ExerciseViewSet
+from trainings.API.views.training import TrainingViewSet
 
 router = DefaultRouter()
 router.register(r'exercises', ExerciseViewSet, basename='api-exercises')
+router.register(r'trainings', TrainingViewSet, basename='api-trainings')
 
 
 urlpatterns = [
@@ -32,10 +34,6 @@ urlpatterns = [
     #TRAINING RECORD
     path('training-records/', training_record.ListCreateTrainingRecordsApiView.as_view(), name='api-training-records'),
     path('training-records/<int:pk>', training_record.UpdateDestroyTrainingRecordApiView.as_view(), name='api-edit-training-record'),
-
-    #TRAININGS
-    path('trainings/', training.ListCreateTrainingsApiView.as_view(), name='api-trainings'),
-    path('trainings/<int:pk>', training.UpdateDestroyTrainingApiView.as_view(), name='api-trainings-edit'),
 
     #USER TRAINING PLAN
     path('user-training-plans/', user_training_plan.ListCreateUserTrainingPlanApiView.as_view(), name='api-user-training-plan'),

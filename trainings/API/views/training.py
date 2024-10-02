@@ -1,13 +1,13 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import Response
 from trainings.API.serializers import TrainingSerializer
 from trainings.models import Training
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
+from rest_framework.viewsets import ModelViewSet
 
 
-class ListCreateTrainingsApiView(ListCreateAPIView):
+class TrainingViewSet(ModelViewSet):
     queryset = Training.objects.all()
     serializer_class = TrainingSerializer
     permission_classes = [IsAuthenticated]
@@ -16,6 +16,16 @@ class ListCreateTrainingsApiView(ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         return Training.objects.filter(user=user)
+
+    def get_object(self) -> Training:
+        user = self.request.user.id
+        training_id = self.kwargs.get('pk')
+
+        try:
+            training = Training.objects.get(pk=training_id, user=user)
+            return training
+        except Training.DoesNotExist:
+            self.permission_denied(self.request)
 
     def create(self, request, *args, **kwargs):
         mutable_data = request.data.copy()
@@ -28,20 +38,3 @@ class ListCreateTrainingsApiView(ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class UpdateDestroyTrainingApiView(RetrieveUpdateDestroyAPIView):
-    queryset = Training.objects.all()
-    serializer_class = TrainingSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-    def get_object(self) -> Training:
-        user = self.request.user.id
-        training_id = self.kwargs.get('pk')
-
-        try:
-            training = Training.objects.get(pk=training_id, user=user)
-            return training
-        except Training.DoesNotExist:
-            self.permission_denied(self.request)
