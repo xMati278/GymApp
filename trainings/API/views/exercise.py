@@ -1,5 +1,5 @@
 from rest_framework.views import Response
-from rest_framework.generics import ListAPIView,ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 from trainings.API.serializers import ExercisesSerializer, BodyPartSerializer
 from trainings.models import Exercise, BodyPart
