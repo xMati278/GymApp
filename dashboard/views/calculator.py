@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from trainings.forms import CalculatorForm
-from trainings.calculators import Calculators
+from calculators.API.calculators import Calculators
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
