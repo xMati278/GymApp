@@ -6,7 +6,7 @@ from trainings.models import Exercise, BodyPart
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class GetAllBodyParts(ListAPIView):
