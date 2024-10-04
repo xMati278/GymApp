@@ -67,6 +67,8 @@ LOGOUT_URL = reverse_lazy('login')
 INSTALLED_EXTENSIONS = [
     'trainings',
     'dashboard',
+    'accounts',
+    'calculators',
 ]
 
 

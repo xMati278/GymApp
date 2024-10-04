@@ -6,6 +6,7 @@ from django.views.generic.base import RedirectView
 api_v1 = [
     path('api/v1/', include('accounts.API.urls')),
     path('api/v1/', include('trainings.API.urls')),
+    path('api/v1/', include('calculators.API.urls')),
 ]
 
 web_app = [

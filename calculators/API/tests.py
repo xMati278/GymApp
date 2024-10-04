@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 import json
-from trainings.calculators import Calculators
+from calculators.API.calculators import Calculators
 from rest_framework import status
 
 

@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from trainings.API.calculators import Calculators
-from trainings.API.serializers import (Calculate1RMSerializer, CalculatorResultSerializer, CalculateTotalSerializer,
+from calculators.API.calculators import Calculators
+from calculators.API.serializers import (Calculate1RMSerializer, CalculatorResultSerializer, CalculateTotalSerializer,
                                        PointsCalculatorSerializer, TotalCalculatorResultSerializer)
 
 
