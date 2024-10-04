@@ -6,12 +6,36 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import PermissionDenied
 
 class TrainingRecordViewSet(ModelViewSet):
+    """
+    A viewset for managing training records. This allows authenticated users to create, retrieve,
+    update, and delete their own training records.
+
+    **Permissions**:
+    - Only authenticated users can access and manage their training records.
+    - Users cannot access records belonging to other users.
+
+    **Authentication**:
+    - JWT authentication is required to verify user identity.
+
+    **Functionality**:
+    - Users can manage their own training records.
+    - The viewset checks for proper permissions when accessing specific records, ensuring that
+      users can only view and modify their own records.
+    """
+
     queryset = TrainingRecord.objects.all()
     serializer_class = TrainingRecordSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_object(self):
+        """
+        Retrieves a specific training record for the authenticated user.
+        - Checks if the record belongs to the authenticated user.
+        - Raises a PermissionDenied error if the user tries to access a record that is not theirs or
+          if the record does not exist.
+        """
+
         user_id = self.request.user.id
         url_user_id = self.kwargs.get('user')
         record_id = self.kwargs.get('pk')
@@ -28,5 +52,9 @@ class TrainingRecordViewSet(ModelViewSet):
         return super().get_object()
 
     def get_queryset(self):
+        """
+        Returns the queryset of training records specific to the authenticated user.
+        """
+
         user_id = self.request.user.id
         return TrainingRecord.objects.filter(user=user_id)
