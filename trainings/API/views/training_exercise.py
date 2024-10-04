@@ -26,7 +26,7 @@ class TrainingExerciseViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def get_object(self):
+    def get_object(self) -> TrainingExercise:
         """
         Retrieves a specific training exercise based on the provided exercise ID.
         Raises a NotFound error if the exercise does not exist.

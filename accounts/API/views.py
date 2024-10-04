@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from rest_framework.request import Request
 
 
 class UserRegister(generics.CreateAPIView):
@@ -37,7 +38,7 @@ class UserRegister(generics.CreateAPIView):
     serializer_class = RegistrationSerializer
     permission_classes = [AllowAny]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: Request, *args, **kwargs) -> Response:
         username = request.data.get('username')
 
         if User.objects.filter(username=username).exists():

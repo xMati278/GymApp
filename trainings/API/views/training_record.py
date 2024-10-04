@@ -28,7 +28,7 @@ class TrainingRecordViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def get_object(self):
+    def get_object(self) -> TrainingRecord:
         """
         Retrieves a specific training record for the authenticated user.
         - Checks if the record belongs to the authenticated user.
@@ -51,7 +51,7 @@ class TrainingRecordViewSet(ModelViewSet):
 
         return super().get_object()
 
-    def get_queryset(self):
+    def get_queryset(self) -> TrainingRecord:
         """
         Returns the queryset of training records specific to the authenticated user.
         """

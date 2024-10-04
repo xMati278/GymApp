@@ -6,6 +6,7 @@ from trainings.models import Exercise, BodyPart
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
+from typing import Any, Dict, Optional
 
 
 class GetAllBodyParts(ListAPIView):
@@ -37,7 +38,7 @@ class ExerciseViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def get_queryset(self):
+    def get_queryset(self) -> Exercise:
         """
         Returns the appropriate queryset based on the type of exercise (public or private).
         """
@@ -67,7 +68,7 @@ class ExerciseViewSet(ModelViewSet):
         except Exercise.DoesNotExist:
             self.permission_denied(self.request)
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request: Any, *args: Any, **kwargs: Any) -> Response:
         """
         Creates a new exercise for the authenticated user.
         The user is automatically assigned to the exercise being created.
@@ -85,7 +86,7 @@ class ExerciseViewSet(ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_permissions(self):
+    def get_permissions(self) -> list:
         """
         Returns the appropriate permission classes based on the HTTP method.
         Only authenticated users can create exercises, while other actions may allow anonymous access.

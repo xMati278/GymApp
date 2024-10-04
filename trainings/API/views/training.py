@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from typing import Any
+from rest_framework.request import Request
 
 
 class TrainingViewSet(ModelViewSet):
@@ -28,7 +30,7 @@ class TrainingViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def get_queryset(self):
+    def get_queryset(self) -> Training:
         """
         Returns the training sessions specific to the authenticated user.
         """
@@ -51,7 +53,7 @@ class TrainingViewSet(ModelViewSet):
         except Training.DoesNotExist:
             self.permission_denied(self.request)
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """
         Creates a new training session for the authenticated user.
         The user is automatically associated with the training session.
