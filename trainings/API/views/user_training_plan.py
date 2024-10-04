@@ -8,16 +8,41 @@ from rest_framework.viewsets import ModelViewSet
 
 
 class UserTrainingPlansViewSet(ModelViewSet):
+    """
+    A viewset for managing user training plans. This allows authenticated users to create, retrieve,
+    update, and delete their own training plans.
+
+    **Permissions**:
+    - Only authenticated users can access and manage their own training plans.
+
+    **Authentication**:
+    - JWT authentication is required to verify user identity.
+
+    **Functionality**:
+    - Users can manage their own training plans.
+    - Only the owner of a training plan can view, modify, or delete it.
+    - The viewset ensures proper validation and permission checks during creation and access.
+    """
+
     queryset = UserTrainingPlans.objects.all()
     serializer_class = UserTrainingPlansSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
+        """
+        Returns the training plans specific to the authenticated user.
+        """
+
         user = self.request.user
         return UserTrainingPlans.objects.filter(user=user)
 
     def get_object(self) -> UserTrainingPlans:
+        """
+        Retrieves a specific training plan for the authenticated user.
+        Raises a permission error if the plan does not exist or does not belong to the user.
+        """
+
         user = self.request.user.id
         plan_id = self.kwargs.get('pk')
 
@@ -28,6 +53,11 @@ class UserTrainingPlansViewSet(ModelViewSet):
             self.permission_denied(self.request)
 
     def create(self, request, *args, **kwargs):
+        """
+        Creates a new training plan for the authenticated user.
+        The user is automatically associated with the training plan.
+        """
+
         mutable_data = request.data.copy()
         mutable_data['user'] = self.request.user.id
 
