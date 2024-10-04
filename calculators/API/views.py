@@ -7,7 +7,7 @@ from calculators.API.serializers import (Calculate1RMSerializer, CalculatorResul
 
 class Calculate1RM(APIView):
     """
-    Validate, calculates and returns one rep max weight for the given data.
+    Validates the input data and calculates the one-rep max (1RM) based on the provided information.
     """
 
     @staticmethod
@@ -23,7 +23,7 @@ class Calculate1RM(APIView):
 
 class CalculateWilks(APIView):
     """
-        Validate, calculates and returns wilks points for the given data.
+    Validates the input data and calculates Wilks points based on the provided information.
     """
 
     @staticmethod
@@ -39,7 +39,7 @@ class CalculateWilks(APIView):
 
 class CalculateDots(APIView):
     """
-        Validate, calculates and returns dots points for the given data.
+    Validates the input data and calculates DOTS points based on the provided information.
     """
 
     @staticmethod
@@ -55,7 +55,7 @@ class CalculateDots(APIView):
 
 class CalculateIpfGl(APIView):
     """
-        Validate, calculates and returns dots points for the given data.
+    Validates the input data and calculates IPF GL points based on the provided information.
     """
 
     @staticmethod
@@ -71,7 +71,7 @@ class CalculateIpfGl(APIView):
 
 class CalculateTotal(APIView):
     """
-        Validate, calculates and returns total data for the given data.
+    Validates the input data and calculates the total result based on the provided information.
     """
 
     @staticmethod
