@@ -30,37 +30,3 @@ class TrainingRecordViewSet(ModelViewSet):
     def get_queryset(self):
         user_id = self.request.user.id
         return TrainingRecord.objects.filter(user=user_id)
-
-
-# class ListCreateTrainingRecordsApiView(ListCreateAPIView):
-#     queryset = TrainingRecord.objects.all()
-#     serializer_class = TrainingRecordSerializer
-#     permission_classes = [IsAuthenticated]
-#     authentication_classes = [JWTAuthentication]
-#
-#     def get_object(self) -> TrainingRecord:
-#         user = self.kwargs.get('user')
-#         request_user = self.request.user.id
-#
-#         if request_user != user:
-#             self.permission_denied(self.request)
-#
-#         return TrainingRecord.objects.get(user=user)
-#
-#
-# class UpdateDestroyTrainingRecordApiView(RetrieveUpdateDestroyAPIView):
-#     queryset = TrainingRecord.objects.all()
-#     serializer_class = TrainingRecordSerializer
-#     permission_classes = [IsAuthenticated]
-#     authentication_classes = [JWTAuthentication]
-#
-#     def get_object(self) -> TrainingRecord:
-#         user = self.request.user.id
-#         record_id = self.kwargs.get('pk')
-#
-#         try:
-#             record = TrainingRecord.objects.get(pk=record_id, user=user)
-#             return record
-#
-#         except TrainingRecord.DoesNotExist:
-#             self.permission_denied(self.request)
