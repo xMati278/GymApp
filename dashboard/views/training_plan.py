@@ -13,10 +13,9 @@ import json
 
 
 class CreateTrainingPlans(CreateView):
-    model = Exercise
+    model = UserTrainingPlans
     form_class = CreateTrainingPlanForm
     template_name = 'dashboard/training_plan_create.html'
-    success_url = reverse_lazy('training_plans')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -24,9 +23,11 @@ class CreateTrainingPlans(CreateView):
         return kwargs
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        return response
+        training_plan = form.save(commit=False)
+        training_plan.user = self.request.user
+        training_plan.save()
 
+        return redirect('training_plan_detail', pk=training_plan.pk)
 
 class ReadTrainingPlans(LoginRequiredMixin, ListView):
     template_name = 'dashboard/training_plans.html'
