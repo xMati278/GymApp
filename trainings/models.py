@@ -34,6 +34,10 @@ class UserTrainingPlans(models.Model): # TrainingPlan
     last_training = models.DateTimeField(blank=True, null=True, help_text='date of last training')
     exercises_info = models.ManyToManyField(TrainingPlanExerciseInfo, blank=True, related_name='training_plans') # [exercise: 1, reps: 5, series: 5]
 
+    def delete(self, using=None, keep_parents=False):
+        self.exercises_info.all().delete()
+        super().delete(using=using, keep_parents=keep_parents)
+
     def __str__(self):
         return f'{self.pk}, {self.name}'
 
